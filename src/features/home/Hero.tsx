@@ -47,9 +47,9 @@ export function Hero() {
             </span>
           </motion.h1>
 
-          <motion.div {...rise(0.12)} className="mt-4">
-            <span className="inline-flex items-center gap-2 rounded-full border border-volt-400/20 bg-volt-400/[0.06] px-3.5 py-1.5 text-sm font-semibold text-volt-400">
-              <MapPin className="size-3.5" aria-hidden />
+          <motion.div {...rise(0.12)} className="mt-5">
+            <span className="inline-flex items-center gap-2 rounded-full border border-volt-400/30 bg-volt-400/[0.11] px-4 py-2 text-base font-bold text-volt-300 shadow-[0_0_28px_-8px_rgba(195_240_60/0.45)]">
+              <MapPin className="size-4" aria-hidden />
               {TOURNAMENT.district}
             </span>
           </motion.div>

@@ -89,7 +89,7 @@ export function HeroArt({ className, prizePool }: { className?: string; prizePoo
           <rect x="-12" y="0" width="24" height="160" rx="11" />
         </clipPath>
         <clipPath id={g('ballClip')}>
-          <circle r="56" />
+          <circle r="74" />
         </clipPath>
         <filter id={g('blur8')} x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="8" />
@@ -126,10 +126,10 @@ export function HeroArt({ className, prizePool }: { className?: string; prizePoo
       <rect x="459" y="253" width="43" height="8" rx="4" fill={url('stump')} />
 
       {/* Bat shadow */}
-      <ellipse cx="180" cy="490" rx="64" ry="10" fill="#000" opacity="0.6" filter={url('blur3')} />
+      <ellipse cx="340" cy="490" rx="64" ry="10" fill="#000" opacity="0.6" filter={url('blur3')} />
 
       {/* Bat */}
-      <g transform="translate(430 70) rotate(33) scale(0.96)">
+      <g transform="translate(485 120) rotate(33) scale(0.72)">
         <path
           d="M46 200 L46 478"
           stroke="#c3f03c"
@@ -198,81 +198,81 @@ export function HeroArt({ className, prizePool }: { className?: string; prizePoo
       </g>
 
       {/* Impact & ball trail */}
-      <circle cx="305" cy="262" r="46" fill={url('flash')} />
-      <polygon points="306.2,260.4 210.9,139.3 159.1,210.7 303.8,263.6" fill={url('trail')} />
+      <circle cx="230" cy="292" r="56" fill={url('flash')} />
+      <polygon points="232,290 176,208 136,264 230,292" fill={url('trail')} />
       <g stroke="#e6fca8" strokeLinecap="round" opacity="0.5">
-        <path d="M282 220 L238 188" strokeWidth="1.5" />
-        <path d="M300 236 L262 208" strokeWidth="1" />
-        <path d="M262 262 L222 233" strokeWidth="1" />
+        <path d="M216 258 L186 218" strokeWidth="1.5" />
+        <path d="M228 272 L200 240" strokeWidth="1" />
+        <path d="M200 288 L172 256" strokeWidth="1" />
       </g>
 
       {/* Ball */}
-      <g transform="translate(185 175)">
+      <g transform="translate(230 292)">
         <g className="animate-float" style={{ transformBox: 'fill-box', transformOrigin: 'center' }}>
-          <circle r="82" fill="#c3f03c" opacity="0.2" filter={url('blur8')} />
-          <circle r="56" fill={url('ball')} />
+          <circle r="106" fill="#c3f03c" opacity="0.2" filter={url('blur8')} />
+          <circle r="74" fill={url('ball')} />
           <g clipPath={url('ballClip')} transform="rotate(-28)">
-            <path d="M-62 -8 C-30 18 30 18 62 -8" fill="none" stroke="#f3e2c0" strokeWidth="3" opacity="0.92" />
+            <path d="M-82 -10 C-40 24 40 24 82 -10" fill="none" stroke="#f3e2c0" strokeWidth="4" opacity="0.92" />
             <path
-              d="M-62 -16 C-30 10 30 10 62 -16"
+              d="M-82 -22 C-40 14 40 14 82 -22"
               fill="none"
               stroke="#f3e2c0"
-              strokeWidth="3"
-              strokeDasharray="0.1 6"
+              strokeWidth="4"
+              strokeDasharray="0.1 8"
               strokeLinecap="round"
               opacity="0.8"
             />
             <path
-              d="M-62 0 C-30 26 30 26 62 0"
+              d="M-82 0 C-40 34 40 34 82 0"
               fill="none"
               stroke="#f3e2c0"
-              strokeWidth="3"
-              strokeDasharray="0.1 6"
+              strokeWidth="4"
+              strokeDasharray="0.1 8"
               strokeLinecap="round"
               opacity="0.8"
             />
           </g>
-          <ellipse cx="-19" cy="-23" rx="21" ry="12" fill="#fff" opacity="0.3" filter={url('blur3')} />
-          <ellipse cx="-22" cy="-27" rx="7" ry="4" fill="#fff" opacity="0.75" />
+          <ellipse cx="-25" cy="-30" rx="28" ry="16" fill="#fff" opacity="0.3" filter={url('blur3')} />
+          <ellipse cx="-29" cy="-36" rx="9" ry="5" fill="#fff" opacity="0.75" />
           <path
-            d="M50.7 -18.5 A54 54 0 0 1 -18.5 50.7"
+            d="M67 -24.5 A72 72 0 0 1 -24.5 67"
             fill="none"
             stroke="#d4f86c"
-            strokeWidth="3"
+            strokeWidth="4"
             strokeLinecap="round"
             opacity="0.75"
           />
+
+          {/* Prize pool on the ball */}
+          {prizePool && (
+            <>
+              <circle r="74" fill="#0a0d0a" fillOpacity="0.35" />
+              <text
+                textAnchor="middle"
+                fontFamily="'Archivo Variable', Archivo, sans-serif"
+                fontWeight="900"
+                fontSize="12"
+                letterSpacing="2"
+                fill="#c3f03c"
+                y="-10"
+                style={{ fontStretch: '115%' }}
+              >
+                PRIZE POOL
+              </text>
+              <text
+                textAnchor="middle"
+                fontFamily="'Archivo Variable', Archivo, sans-serif"
+                fontWeight="900"
+                fontSize="24"
+                fill="#f6f8f5"
+                y="18"
+              >
+                {prizePool}
+              </text>
+            </>
+          )}
         </g>
       </g>
-
-      {/* Prize pool above the ball */}
-      {prizePool && (
-        <g transform="translate(185 90)">
-          <rect x="-52" y="-22" width="104" height="44" rx="22" fill="#0a0d0a" fillOpacity="0.85" stroke="#c3f03c" strokeOpacity="0.4" strokeWidth="1.5" />
-          <text
-            textAnchor="middle"
-            fontFamily="'Archivo Variable', Archivo, sans-serif"
-            fontWeight="900"
-            fontSize="10"
-            letterSpacing="2.5"
-            fill="#c3f03c"
-            y="-4"
-            style={{ fontStretch: '115%' }}
-          >
-            PRIZE POOL
-          </text>
-          <text
-            textAnchor="middle"
-            fontFamily="'Archivo Variable', Archivo, sans-serif"
-            fontWeight="900"
-            fontSize="18"
-            fill="#f6f8f5"
-            y="16"
-          >
-            {prizePool}
-          </text>
-        </g>
-      )}
 
       {/* Sparkles */}
       <g fill="#e6fca8">
