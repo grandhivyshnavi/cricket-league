@@ -12,6 +12,7 @@ export const ROUTES = {
   about: '/about',
   register: '/register',
   adminLogin: '/admin/login',
+  adminSignup: '/admin/signup',
   admin: '/admin',
 } as const
 

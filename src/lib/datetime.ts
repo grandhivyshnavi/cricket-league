@@ -68,3 +68,17 @@ export function formatDateRange(start: string | null, end: string | null) {
   const year = end.slice(0, 4)
   return `${formatShortDate(start)} – ${formatShortDate(end)} ${year}`
 }
+
+/** Human-friendly relative time, e.g. "2 hours ago", "3 days ago". */
+export function formatRelative(iso: string) {
+  const ms = Date.now() - new Date(iso).getTime()
+  const sec = Math.floor(ms / 1000)
+  if (sec < 60) return 'Just now'
+  const min = Math.floor(sec / 60)
+  if (min < 60) return `${min}m ago`
+  const hr = Math.floor(min / 60)
+  if (hr < 24) return `${hr}h ago`
+  const days = Math.floor(hr / 24)
+  if (days < 30) return `${days}d ago`
+  return dateFmt.format(new Date(iso))
+}

@@ -1,10 +1,11 @@
-import { Gauge, ListOrdered, Settings, Shield, Swords, type LucideIcon } from 'lucide-react'
+import { Gauge, ListOrdered, Settings, Shield, Swords, Users, type LucideIcon } from 'lucide-react'
 
 export const ADMIN_TABS = [
   { id: 'overview', label: 'Overview', icon: Gauge },
   { id: 'teams', label: 'Teams', icon: Shield },
   { id: 'matches', label: 'Matches', icon: Swords },
   { id: 'leaderboard', label: 'Leaderboard', icon: ListOrdered },
+  { id: 'members', label: 'Members', icon: Users },
   { id: 'settings', label: 'Tournament info', icon: Settings },
 ] as const satisfies readonly { id: string; label: string; icon: LucideIcon }[]
 

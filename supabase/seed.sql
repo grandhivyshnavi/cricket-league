@@ -24,5 +24,5 @@ update public.tournament_settings set
   description = 'The festive-season cricket showdown. Top local sides, floodlit fixtures and a championship trophy — experience every six, wicket and victory this Sankranthi.',
   start_date = '2027-01-10',
   end_date = '2027-01-16',
-  prize_pool = '₹5L'
+  prize_pool = '₹1L'
 where id = 1;

@@ -85,7 +85,7 @@ export function createDemoSeed(): TournamentSnapshot {
       teamsCountOverride: null,
       matchesCountOverride: null,
       daysOverride: null,
-      prizePool: '₹5L',
+      prizePool: '₹1L',
       promoVideoUrl: null,
       updatedAt: created,
     },

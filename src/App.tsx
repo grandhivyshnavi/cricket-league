@@ -14,6 +14,7 @@ import TeamsPage from '@/pages/TeamsPage'
 
 const AdminPage = lazy(() => import('@/pages/admin/AdminPage'))
 const AdminLoginPage = lazy(() => import('@/pages/admin/AdminLoginPage'))
+const AdminSignupPage = lazy(() => import('@/pages/admin/AdminSignupPage'))
 
 const fallback = <Spinner className="min-h-[60vh]" />
 
@@ -35,6 +36,14 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={fallback}>
         <AdminLoginPage />
+      </Suspense>
+    ),
+  },
+  {
+    path: 'admin/signup',
+    element: (
+      <Suspense fallback={fallback}>
+        <AdminSignupPage />
       </Suspense>
     ),
   },

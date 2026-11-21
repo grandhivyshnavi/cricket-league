@@ -5,6 +5,7 @@ import { ErrorState, Spinner } from '@/components/ui/states'
 import { ADMIN_TABS, isAdminTab, type AdminTab } from '@/features/admin/adminTabs'
 import { LeaderboardTab } from '@/features/admin/tabs/LeaderboardTab'
 import { MatchesTab } from '@/features/admin/tabs/MatchesTab'
+import { MembersTab } from '@/features/admin/tabs/MembersTab'
 import { OverviewTab } from '@/features/admin/tabs/OverviewTab'
 import { SettingsTab } from '@/features/admin/tabs/SettingsTab'
 import { TeamsTab } from '@/features/admin/tabs/TeamsTab'
@@ -61,6 +62,7 @@ export default function AdminPage() {
             {tab === 'teams' && <TeamsTab />}
             {tab === 'matches' && <MatchesTab />}
             {tab === 'leaderboard' && <LeaderboardTab />}
+            {tab === 'members' && <MembersTab />}
             {tab === 'settings' && <SettingsTab />}
           </motion.div>
         )}

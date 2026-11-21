@@ -7,6 +7,7 @@ import { demoAuth, getDemoUser } from './demo/demoAuth'
 export interface AuthService {
   getCurrentUser(): Promise<AuthUser | null>
   signIn(email: string, password: string): Promise<void>
+  signUp(email: string, password: string, fullName: string): Promise<void>
   signOut(): Promise<void>
   onChange(cb: (user: AuthUser | null) => void): () => void
 }
@@ -32,6 +33,14 @@ function createSupabaseAuth(client: SupabaseClient): AuthService {
       const { error } = await client.auth.signInWithPassword({ email: email.trim(), password })
       if (error) throw new AppError(error.status === 400 ? 'Invalid email or password.' : error.message)
     },
+    async signUp(email, password, fullName) {
+      const { error } = await client.auth.signUp({
+        email: email.trim(),
+        password,
+        options: { data: { full_name: fullName.trim() } },
+      })
+      if (error) throw new AppError(error.message)
+    },
     async signOut() {
       await client.auth.signOut()
     },
@@ -48,6 +57,7 @@ function createSupabaseAuth(client: SupabaseClient): AuthService {
 const demoAuthService: AuthService = {
   getCurrentUser: async () => getDemoUser(),
   signIn: demoAuth.signIn,
+  signUp: demoAuth.signUp,
   signOut: demoAuth.signOut,
   onChange: demoAuth.onChange,
 }

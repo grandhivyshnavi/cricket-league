@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, LayoutDashboard, Menu, X } from 'lucide-react'
+import { ArrowRight, LayoutDashboard, LogIn, Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Logo } from '@/components/brand/Logo'
@@ -84,9 +84,13 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          {isAdmin && (
+          {isAdmin ? (
             <ButtonLink to={ROUTES.admin} variant="ghost" size="sm" className="hidden sm:inline-flex">
               <LayoutDashboard /> Admin
+            </ButtonLink>
+          ) : (
+            <ButtonLink to={ROUTES.adminLogin} variant="ghost" size="sm" className="hidden sm:inline-flex">
+              <LogIn /> Admin Login
             </ButtonLink>
           )}
           <ButtonLink to={ROUTES.register} size="sm" className="hidden sm:inline-flex">
@@ -145,9 +149,13 @@ export function Navbar() {
                 ))}
               </ul>
               <div className="mt-auto flex flex-col gap-3 pt-10">
-                {isAdmin && (
+                {isAdmin ? (
                   <ButtonLink to={ROUTES.admin} variant="secondary" size="lg">
                     <LayoutDashboard /> Admin panel
+                  </ButtonLink>
+                ) : (
+                  <ButtonLink to={ROUTES.adminLogin} variant="secondary" size="lg">
+                    <LogIn /> Admin Login
                   </ButtonLink>
                 )}
                 <ButtonLink to={ROUTES.register} size="lg">
