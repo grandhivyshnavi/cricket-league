@@ -11,7 +11,7 @@ import { ROUTES, TOURNAMENT } from '@/config/site'
 import { isDemoMode } from '@/data'
 import { DEMO_ADMIN_CREDENTIALS } from '@/data/demo/demoAuth'
 import { DemoModeBanner } from '@/features/admin/AdminLayout'
-import { getErrorMessage } from '@/lib/utils'
+import { getErrorMessage, isValidEmail } from '@/lib/utils'
 import { useAuth } from '@/state/AuthProvider'
 
 export default function AdminLoginPage() {
@@ -29,8 +29,12 @@ export default function AdminLoginPage() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    if (!email.trim() || !password) {
-      setError('Enter your email and password.')
+    if (!isValidEmail(email)) {
+      setError('Enter a valid email address.')
+      return
+    }
+    if (!password) {
+      setError('Enter your password.')
       return
     }
     setError(null)

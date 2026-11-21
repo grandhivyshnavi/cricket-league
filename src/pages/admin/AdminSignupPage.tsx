@@ -10,7 +10,7 @@ import { Spinner } from '@/components/ui/states'
 import { ROUTES, TOURNAMENT } from '@/config/site'
 import { isDemoMode } from '@/data'
 import { DemoModeBanner } from '@/features/admin/AdminLayout'
-import { getErrorMessage } from '@/lib/utils'
+import { getErrorMessage, isValidEmail } from '@/lib/utils'
 import { useAuth } from '@/state/AuthProvider'
 
 export default function AdminSignupPage() {
@@ -34,8 +34,8 @@ export default function AdminSignupPage() {
       setError('Please enter your full name.')
       return
     }
-    if (!email.trim()) {
-      setError('Please enter your email address.')
+    if (!isValidEmail(email)) {
+      setError('Please enter a valid email address.')
       return
     }
     if (password.length < 6) {
