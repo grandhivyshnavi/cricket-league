@@ -55,7 +55,7 @@ export function LeaderboardSection() {
               className="m-4 border-0"
             />
           ) : (
-            <LeaderboardTable teams={visible} highlight={highlight} caption="Tournament leaderboard" />
+            <LeaderboardTable teams={visible} highlight={highlight} caption="Tournament leaderboard" editable={isAdmin} />
           )}
           {ranked.length > HOME_LIMIT && (
             <div className="border-t border-white/[0.05] px-6 py-4 text-center">

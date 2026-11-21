@@ -8,9 +8,11 @@ import { LeaderSpotlight } from '@/features/leaderboard/LeaderSpotlight'
 import { hasStandings, rankTeams } from '@/features/leaderboard/standings'
 import { ResultRow } from '@/features/matches/ResultRow'
 import { completedMatches } from '@/features/matches/selectors'
+import { useAuth } from '@/state/AuthProvider'
 import { useTournament } from '@/state/TournamentProvider'
 
 export default function StatsPage() {
+  const { isAdmin } = useAuth()
   const { teams, matches, status, error, reload } = useTournament()
   const ranked = rankTeams(teams)
   const highlight = hasStandings(teams)
@@ -37,7 +39,7 @@ export default function StatsPage() {
               ) : ranked.length === 0 ? (
                 <EmptyState icon={ListOrdered} title="No teams yet" className="m-4 border-0" />
               ) : (
-                <LeaderboardTable teams={ranked} highlight={highlight} caption="Full tournament leaderboard" />
+                <LeaderboardTable teams={ranked} highlight={highlight} caption="Full tournament leaderboard" editable={isAdmin} />
               )}
             </div>
             {status === 'ready' && ranked.length > 0 && <LeaderSpotlight leader={highlight ? ranked[0] : null} />}
