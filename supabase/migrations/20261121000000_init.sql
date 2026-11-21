@@ -85,8 +85,8 @@ create trigger profiles_guard_role before update on public.profiles
 
 alter table public.profiles enable row level security;
 
-create policy "profiles: read own or admin" on public.profiles
-  for select to authenticated using (id = auth.uid() or public.is_admin());
+create policy "profiles: read own" on public.profiles
+  for select to authenticated using (id = auth.uid());
 
 create policy "profiles: update own or admin" on public.profiles
   for update to authenticated
