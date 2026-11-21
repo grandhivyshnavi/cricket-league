@@ -20,7 +20,7 @@ function Floodlight({ x, y, scale = 1, glowId }: { x: number; y: number; scale?:
  * Hero illustration: a bat that has just struck the ball, stumps behind,
  * under floodlights. Pure SVG so it stays crisp on every display.
  */
-export function HeroArt({ className }: { className?: string }) {
+export function HeroArt({ className, prizePool }: { className?: string; prizePool?: string | null }) {
   const g = useSvgId()
   const url = (n: string) => `url(#${g(n)})`
 
@@ -244,6 +244,35 @@ export function HeroArt({ className }: { className?: string }) {
           />
         </g>
       </g>
+
+      {/* Prize pool above the ball */}
+      {prizePool && (
+        <g transform="translate(185 90)">
+          <rect x="-52" y="-22" width="104" height="44" rx="22" fill="#0a0d0a" fillOpacity="0.85" stroke="#c3f03c" strokeOpacity="0.4" strokeWidth="1.5" />
+          <text
+            textAnchor="middle"
+            fontFamily="'Archivo Variable', Archivo, sans-serif"
+            fontWeight="900"
+            fontSize="10"
+            letterSpacing="2.5"
+            fill="#c3f03c"
+            y="-4"
+            style={{ fontStretch: '115%' }}
+          >
+            PRIZE POOL
+          </text>
+          <text
+            textAnchor="middle"
+            fontFamily="'Archivo Variable', Archivo, sans-serif"
+            fontWeight="900"
+            fontSize="18"
+            fill="#f6f8f5"
+            y="16"
+          >
+            {prizePool}
+          </text>
+        </g>
+      )}
 
       {/* Sparkles */}
       <g fill="#e6fca8">

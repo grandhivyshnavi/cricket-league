@@ -1,5 +1,5 @@
 -- =====================================================================
--- Sankranthi Special Cricket League 2027 — initial schema
+-- Sankranthi Super Cricket League 2027 — initial schema
 -- Security model:
 --   * Everyone (anon + authenticated) can READ public tournament data.
 --   * Only admins (profiles.role = 'admin') can WRITE tournament data.

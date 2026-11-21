@@ -7,7 +7,7 @@
 - Install deps with `npm install --before=<date ≥7 days ago>` to avoid freshly published versions.
 
 ## Conventions
-- Official name: "Sankranthi Special Cricket League 2027" — use `TOURNAMENT` from `src/config/site.ts`.
+- Official name: "Sankranthi Super Cricket League 2027" — use `TOURNAMENT` from `src/config/site.ts`.
 - All data access goes through `src/data` (`TournamentRepository`); UI uses `useTournament()` / `useAuth()`.
 - Security lives in Postgres RLS (`supabase/migrations`). Never rely on hiding UI for permissions.
 - Do not invent scoring/business rules — standings are admin-entered.

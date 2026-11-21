@@ -1,7 +1,8 @@
 export const TOURNAMENT = {
-  name: 'Sankranthi Special Cricket League 2027',
+  name: 'Sankranthi Super Cricket League 2027',
   shortName: 'SSCL 2027',
   year: '2027',
+  district: 'Kadapa',
 } as const
 
 export const ROUTES = {
@@ -12,7 +13,6 @@ export const ROUTES = {
   about: '/about',
   register: '/register',
   adminLogin: '/admin/login',
-  adminSignup: '/admin/signup',
   admin: '/admin',
 } as const
 

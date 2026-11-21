@@ -44,7 +44,7 @@ export function Logo({ className, compact }: { className?: string; compact?: boo
       {!compact && (
         <span className="flex flex-col leading-none">
           <span className="font-heading text-[13px] uppercase tracking-[0.04em] text-fog-50 sm:text-sm">
-            Sankranthi Special
+            Sankranthi Super
           </span>
           <span className="mt-1.5 text-[9.5px] font-bold uppercase tracking-[0.3em] text-fog-400">
             Cricket League <span className="text-volt-400">{TOURNAMENT.year}</span>

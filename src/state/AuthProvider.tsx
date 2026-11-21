@@ -7,7 +7,6 @@ interface AuthContextValue {
   user: AuthUser | null
   isAdmin: boolean
   signIn(email: string, password: string): Promise<void>
-  signUp(email: string, password: string, fullName: string): Promise<void>
   signOut(): Promise<void>
 }
 
@@ -39,12 +38,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signIn = useCallback((email: string, password: string) => authService.signIn(email, password), [])
-  const signUp = useCallback((email: string, password: string, fullName: string) => authService.signUp(email, password, fullName), [])
   const signOut = useCallback(() => authService.signOut(), [])
 
   const value = useMemo<AuthContextValue>(
-    () => ({ status, user, isAdmin: user?.role === 'admin', signIn, signUp, signOut }),
-    [status, user, signIn, signUp, signOut],
+    () => ({ status, user, isAdmin: user?.role === 'admin', signIn, signOut }),
+    [status, user, signIn, signOut],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

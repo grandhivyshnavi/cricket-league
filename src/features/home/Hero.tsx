@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion'
-import { ArrowRight, CalendarDays, Users } from 'lucide-react'
+import { ArrowRight, CalendarDays, MapPin, Users } from 'lucide-react'
 import { HeroArt } from '@/components/brand/HeroArt'
 import { ButtonLink, arrowNudge } from '@/components/ui/button'
 import { ROUTES, TOURNAMENT } from '@/config/site'
 import { formatDateRange } from '@/lib/datetime'
 import { useTournament } from '@/state/TournamentProvider'
-import { StatsPanel } from './StatsPanel'
 
 const ease = [0.16, 1, 0.3, 1] as const
 const rise = (delay: number) => ({
@@ -36,11 +35,10 @@ export function Hero() {
           <motion.h1
             id="hero-title"
             {...rise(0.08)}
-            className="mt-6 font-poster text-[clamp(3rem,15vw,5rem)] uppercase leading-[0.86] text-fog-50 sm:text-[6rem] lg:text-[clamp(4.75rem,6.5vw,6.5rem)]"
+            className="mt-6 font-poster text-[clamp(2.4rem,12vw,3.8rem)] uppercase leading-[0.9] text-fog-50 sm:text-[4.5rem] lg:text-[clamp(3.6rem,5vw,5rem)]"
           >
             <span className="block">Sankranthi</span>
-            <span className="block">Special</span>
-            <span className="block">Cricket</span>
+            <span className="block">Super Cricket</span>
             <span className="flex items-baseline gap-[0.18em]">
               League
               <span className="font-accent -rotate-6 text-[0.86em] leading-none text-volt-400 text-glow">
@@ -49,7 +47,14 @@ export function Hero() {
             </span>
           </motion.h1>
 
-          <motion.div {...rise(0.16)} className="mt-6 max-w-lg">
+          <motion.div {...rise(0.12)} className="mt-4">
+            <span className="inline-flex items-center gap-2 rounded-full border border-volt-400/20 bg-volt-400/[0.06] px-3.5 py-1.5 text-sm font-semibold text-volt-400">
+              <MapPin className="size-3.5" aria-hidden />
+              {TOURNAMENT.district}
+            </span>
+          </motion.div>
+
+          <motion.div {...rise(0.18)} className="mt-5 max-w-lg">
             {loading ? (
               <div className="space-y-2.5">
                 <div className="skeleton h-4 w-full rounded" />
@@ -58,12 +63,12 @@ export function Hero() {
             ) : (
               <p className="text-base leading-relaxed text-fog-300 sm:text-[17px]">
                 {settings.description ||
-                  'The festive-season cricket showdown. Join top teams, battle for glory and experience every six, wicket and victory.'}
+                  'The festive-season cricket showdown. Top local sides, floodlit fixtures and a championship trophy — experience every six, wicket and victory this Sankranthi.'}
               </p>
             )}
           </motion.div>
 
-          <motion.div {...rise(0.24)} className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <motion.div {...rise(0.26)} className="mt-8 flex flex-col gap-3 sm:flex-row">
             <ButtonLink to={ROUTES.register} size="lg">
               Join Tournament <ArrowRight className={arrowNudge} />
             </ButtonLink>
@@ -73,7 +78,7 @@ export function Hero() {
           </motion.div>
 
           {range && (
-            <motion.p {...rise(0.32)} className="mt-6 inline-flex items-center gap-2.5 text-sm font-medium text-fog-400">
+            <motion.p {...rise(0.34)} className="mt-6 inline-flex items-center gap-2.5 text-sm font-medium text-fog-400">
               <CalendarDays className="size-4 text-volt-400" aria-hidden />
               {range}
             </motion.p>
@@ -86,15 +91,10 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, delay: 0.1, ease }}
         >
-          <HeroArt />
+          <HeroArt prizePool={settings.prizePool} />
         </motion.div>
       </div>
 
-      <div className="container-page">
-        <motion.div {...rise(0.4)}>
-          <StatsPanel />
-        </motion.div>
-      </div>
     </section>
   )
 }

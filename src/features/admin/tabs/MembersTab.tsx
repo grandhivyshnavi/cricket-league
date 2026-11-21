@@ -1,11 +1,10 @@
-import { Crown, ShieldCheck, ShieldMinus, Trash, UserPlus, Users } from 'lucide-react'
+import { Crown, ShieldCheck, ShieldMinus, Trash, Users } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
-import { Button, ButtonLink } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { EmptyState } from '@/components/ui/states'
-import { ROUTES } from '@/config/site'
 import { isDemoMode } from '@/data'
 import {
   getDemoMembers,
@@ -61,11 +60,6 @@ export function MembersTab() {
       <AdminPanel
         title="Members"
         description={`${members.length} registered member${members.length === 1 ? '' : 's'} (excluding the built-in demo admin)`}
-        actions={
-          <ButtonLink to={ROUTES.adminSignup} size="sm" variant="secondary">
-            <UserPlus /> Invite link
-          </ButtonLink>
-        }
       >
         {!isDemoMode ? (
           <div className="px-5 py-10 text-center sm:px-7">
@@ -78,7 +72,7 @@ export function MembersTab() {
           <EmptyState
             icon={Users}
             title="No members yet"
-            description="Share the signup link with management team members. They'll appear here once they create an account."
+            description="Admin accounts are pre-configured. Use the Supabase dashboard or database to add management members."
             className="m-5 border-0"
           />
         ) : (

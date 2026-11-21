@@ -103,13 +103,7 @@ export default function AdminLoginPage() {
             )}
           </form>
 
-          <div className="mt-8 flex flex-col items-center gap-3 text-center">
-            <p className="text-sm text-fog-400">
-              Management team member?{' '}
-              <ButtonLink to={ROUTES.adminSignup} variant="ghost" size="sm" className="inline-flex">
-                Create account
-              </ButtonLink>
-            </p>
+          <div className="mt-8 flex justify-center">
             <ButtonLink to={ROUTES.home} variant="ghost" size="sm">
               <ArrowLeft /> Back to site
             </ButtonLink>

@@ -1,4 +1,4 @@
-import { ArrowLeft, Lock, LogOut, Mail, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, Lock, LogOut, Mail } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { Button, ButtonLink } from '@/components/ui/button'
@@ -29,12 +29,8 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
         </p>
         <div className="mt-5 max-w-md space-y-2 rounded-control border border-volt-400/15 bg-volt-400/[0.06] p-4 text-left text-sm text-fog-200">
           <p className="flex items-start gap-2.5">
-            <ShieldCheck className="mt-0.5 size-4 shrink-0 text-volt-400" />
-            <span>An existing admin must promote you from the Members tab in the Control Room.</span>
-          </p>
-          <p className="flex items-start gap-2.5">
             <Mail className="mt-0.5 size-4 shrink-0 text-volt-400" />
-            <span>If no admin exists yet, sign in with the original demo credentials or promote this account in the database.</span>
+            <span>Only pre-configured management accounts have admin access. Contact the tournament organiser or sign in with the correct admin credentials.</span>
           </p>
         </div>
         <div className="mt-8 flex flex-wrap justify-center gap-3">

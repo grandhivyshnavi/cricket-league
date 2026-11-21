@@ -32,7 +32,7 @@ export const EXCITEMENT_FEATURES: FeatureItem[] = [
 export const TOURNAMENT_INTRO = {
   eyebrow: 'The Tournament',
   title: 'Feel the Excitement',
-  body: 'From packed grounds to last-over thrillers — the Sankranthi Special Cricket League brings the festive spirit to every boundary, wicket and celebration.',
+  body: 'From packed grounds to last-over thrillers — the Sankranthi Super Cricket League brings the festive spirit to every boundary, wicket and celebration.',
 }
 
 export const JOIN_CTA = {

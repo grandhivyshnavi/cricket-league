@@ -57,7 +57,12 @@ describe('IST date handling', () => {
 
 describe('match selectors', () => {
   it('splits upcoming (soonest first) and completed (latest first)', () => {
-    const { matches } = createDemoSeed()
+    const matches = [
+      { id: 'm1', team1Id: 'a', team2Id: 'b', scheduledAt: '2027-01-12T14:00:00.000Z', venue: 'V', status: 'upcoming' as const, winnerId: null, resultSummary: null, completedAt: null, createdAt: '' },
+      { id: 'm2', team1Id: 'a', team2Id: 'c', scheduledAt: '2027-01-11T14:00:00.000Z', venue: 'V', status: 'completed' as const, winnerId: 'a', resultSummary: 'A won', completedAt: '2027-01-11T17:00:00.000Z', createdAt: '' },
+      { id: 'm3', team1Id: 'b', team2Id: 'c', scheduledAt: '2027-01-13T14:00:00.000Z', venue: 'V', status: 'upcoming' as const, winnerId: null, resultSummary: null, completedAt: null, createdAt: '' },
+      { id: 'm4', team1Id: 'c', team2Id: 'a', scheduledAt: '2027-01-10T14:00:00.000Z', venue: 'V', status: 'completed' as const, winnerId: 'c', resultSummary: 'C won', completedAt: '2027-01-10T17:00:00.000Z', createdAt: '' },
+    ]
     const up = upcomingMatches(matches)
     const done = completedMatches(matches)
     expect(up.length + done.length).toBe(matches.length)
@@ -65,12 +70,16 @@ describe('match selectors', () => {
     expect(Date.parse(up[0].scheduledAt)).toBeLessThanOrEqual(Date.parse(up[1].scheduledAt))
     expect(Date.parse(done[0].completedAt!)).toBeGreaterThanOrEqual(Date.parse(done[1].completedAt!))
   })
+  it('handles empty list', () => {
+    expect(upcomingMatches([])).toEqual([])
+    expect(completedMatches([])).toEqual([])
+  })
 })
 
 describe('deriveTournamentStats', () => {
   it('derives from data unless overridden', () => {
     const seed = createDemoSeed()
-    expect(deriveTournamentStats(seed)).toEqual({ teams: 8, matches: 11, days: 7, prizePool: '₹1L' })
+    expect(deriveTournamentStats(seed)).toEqual({ teams: 0, matches: 0, days: 7, prizePool: '₹1L' })
     const overridden = { ...seed, settings: { ...seed.settings, teamsCountOverride: 16, daysOverride: 24, prizePool: '  ' } }
     expect(deriveTournamentStats(overridden)).toMatchObject({ teams: 16, days: 24, prizePool: null })
   })

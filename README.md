@@ -1,4 +1,4 @@
-# Sankranthi Special Cricket League 2027
+# Sankranthi Super Cricket League 2027
 
 Tournament website and admin console — React 19, Vite, TypeScript, Tailwind CSS v4, Framer Motion, Supabase.
 
