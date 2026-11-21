@@ -1,6 +1,6 @@
 import { ArrowLeft, KeyRound, ShieldCheck } from 'lucide-react'
-import { useEffect, useState, type FormEvent } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import { useState, type FormEvent } from 'react'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { KiteEmblem } from '@/components/brand/Logo'
 import { AmbientBackground } from '@/components/layout/AmbientBackground'
@@ -8,34 +8,24 @@ import { Button, ButtonLink } from '@/components/ui/button'
 import { Field, Input } from '@/components/ui/field'
 import { Spinner } from '@/components/ui/states'
 import { ROUTES, TOURNAMENT } from '@/config/site'
-import { isDemoMode } from '@/data'
+import { authService, isDemoMode } from '@/data'
 import { DEMO_ADMIN_CREDENTIALS } from '@/data/demo/demoAuth'
 import { DemoModeBanner } from '@/features/admin/AdminLayout'
 import { getErrorMessage, isValidEmail } from '@/lib/utils'
 import { useAuth } from '@/state/AuthProvider'
 
 export default function AdminLoginPage() {
-  const { status, user, isAdmin, signIn } = useAuth()
+  const { status, isAdmin, signIn } = useAuth()
+  const navigate = useNavigate()
   const location = useLocation()
   const from = (location.state as { from?: string } | null)?.from ?? ROUTES.admin
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
-  const [awaitingAuth, setAwaitingAuth] = useState(false)
 
   if (status === 'loading') return <Spinner className="min-h-dvh" />
   if (isAdmin) return <Navigate to={from} replace />
-
-  useEffect(() => {
-    if (awaitingAuth && user) {
-      // Auth state settled; isAdmin is false here (handled above), so the account lacks admin role.
-      setAwaitingAuth(false)
-      setPending(false)
-      setError('This account does not have admin access.')
-      toast.error('Admin access required')
-    }
-  }, [awaitingAuth, user])
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -49,15 +39,21 @@ export default function AdminLoginPage() {
     }
     setError(null)
     setPending(true)
-    setAwaitingAuth(true)
     try {
       await signIn(email, password)
-      toast.success('Welcome back')
-      // Do NOT navigate here. Wait for the AuthProvider to resolve the role;
-      // the isAdmin check above will redirect once the role is confirmed.
+      // Re-read the resolved user (with role) directly from the auth service
+      // to avoid racing the AuthProvider's async state update.
+      const current = await authService.getCurrentUser()
+      if (current?.role === 'admin') {
+        toast.success('Welcome back')
+        navigate(from, { replace: true })
+      } else {
+        setError('This account does not have admin access.')
+        toast.error('Admin access required')
+      }
     } catch (err) {
-      setAwaitingAuth(false)
       setError(getErrorMessage(err))
+    } finally {
       setPending(false)
     }
   }
@@ -90,8 +86,8 @@ export default function AdminLoginPage() {
                 aria-invalid={Boolean(error)}
               />
             </Field>
-            <Button type="submit" size="lg" loading={pending || awaitingAuth} className="mt-2">
-              <ShieldCheck /> {awaitingAuth ? 'Signing in…' : 'Sign in'}
+            <Button type="submit" size="lg" loading={pending} className="mt-2">
+              <ShieldCheck /> Sign in
             </Button>
             {isDemoMode && (
               <div className="rounded-control border border-gold-400/20 bg-gold-400/[0.05] p-4 text-xs leading-relaxed text-fog-300">
