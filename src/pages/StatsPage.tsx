@@ -3,7 +3,6 @@ import { PageHeader } from '@/components/layout/PageHeader'
 import { Reveal } from '@/components/ui/reveal'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { EmptyState, ErrorState } from '@/components/ui/states'
-import { StatsPanel } from '@/features/home/StatsPanel'
 import { LeaderboardSkeleton, LeaderboardTable } from '@/features/leaderboard/LeaderboardTable'
 import { LeaderSpotlight } from '@/features/leaderboard/LeaderSpotlight'
 import { hasStandings, rankTeams } from '@/features/leaderboard/standings'
@@ -25,10 +24,6 @@ export default function StatsPage() {
         description="The full leaderboard, headline numbers and every recorded result of the season."
       />
       <div className="container-page space-y-20 pb-16 lg:space-y-28">
-        <Reveal>
-          <StatsPanel />
-        </Reveal>
-
         <section aria-labelledby="table-title">
           <Reveal>
             <SectionHeading eyebrow="Standings" title={<span id="table-title">Leaderboard</span>} />

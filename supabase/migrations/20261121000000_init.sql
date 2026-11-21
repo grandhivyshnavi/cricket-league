@@ -85,8 +85,8 @@ create trigger profiles_guard_role before update on public.profiles
 
 alter table public.profiles enable row level security;
 
-create policy "profiles: read own" on public.profiles
-  for select to authenticated using (id = auth.uid());
+create policy "profiles: read own or admin reads all" on public.profiles
+  for select to authenticated using (id = auth.uid() or public.is_admin());
 
 create policy "profiles: update own or admin" on public.profiles
   for update to authenticated
@@ -265,6 +265,23 @@ create policy "payments: read own or admin" on public.payment_transactions
 -- No insert/update/delete policies for clients on payment tables:
 -- only the service role (Edge Functions) can write them.
 -- payment_webhook_events has no client policies at all.
+
+-- ---------------------------------------------------------------------
+-- Table-level grants (required by Supabase/PostgREST in addition to RLS)
+-- ---------------------------------------------------------------------
+grant select on public.teams to anon, authenticated;
+grant insert, update, delete on public.teams to authenticated;
+
+grant select on public.matches to anon, authenticated;
+grant insert, update, delete on public.matches to authenticated;
+
+grant select on public.tournament_settings to anon, authenticated;
+grant insert, update on public.tournament_settings to authenticated;
+
+grant select, update on public.profiles to authenticated;
+
+grant select, insert, update, delete on public.registrations to authenticated;
+grant select on public.payment_transactions to authenticated;
 
 -- ---------------------------------------------------------------------
 -- Realtime: push public tournament changes to connected browsers

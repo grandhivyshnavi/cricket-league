@@ -19,15 +19,7 @@ export interface AuthService {
  */
 function createSupabaseAuth(client: SupabaseClient): AuthService {
   async function resolve(user: User): Promise<AuthUser> {
-    const { data, error } = await client.from('profiles').select('role').eq('id', user.id).maybeSingle()
-    if (error) {
-      console.error('[SSCL] profiles query error:', error.message, error.code, error.details)
-    }
-    if (!data) {
-      console.warn('[SSCL] No profile row found for user', user.id, '— defaulting to "user" role')
-    } else {
-      console.log('[SSCL] Profile resolved:', { id: user.id, role: data.role })
-    }
+    const { data } = await client.from('profiles').select('role').eq('id', user.id).maybeSingle()
     const role: AppRole = data?.role === 'admin' ? 'admin' : 'user'
     return { id: user.id, email: user.email ?? '', role }
   }
