@@ -75,3 +75,31 @@ export interface AuthUser {
   email: string
   role: AppRole
 }
+
+export type RegistrationStatus = 'pending' | 'approved' | 'rejected' | 'cancelled'
+
+export interface RegistrationPlayer {
+  /** Roster position, 1–11. */
+  playerNo: number
+  fullName: string
+  phone: string
+}
+
+export interface TeamRegistration {
+  id: string
+  teamName: string
+  email: string
+  contactPhone: string
+  addressLine1: string
+  addressLine2: string | null
+  city: string
+  state: string
+  pinCode: string
+  /** Object path in the private `team-photos` bucket. */
+  photoPath: string | null
+  /** True while the photo upload has not been confirmed (incomplete submission). */
+  awaitingPhoto: boolean
+  status: RegistrationStatus
+  createdAt: string
+  players: RegistrationPlayer[]
+}

@@ -7,6 +7,7 @@ import { LeaderboardTab } from '@/features/admin/tabs/LeaderboardTab'
 import { MatchesTab } from '@/features/admin/tabs/MatchesTab'
 import { MembersTab } from '@/features/admin/tabs/MembersTab'
 import { OverviewTab } from '@/features/admin/tabs/OverviewTab'
+import { RegistrationsTab } from '@/features/admin/tabs/RegistrationsTab'
 import { SettingsTab } from '@/features/admin/tabs/SettingsTab'
 import { TeamsTab } from '@/features/admin/tabs/TeamsTab'
 import { cn } from '@/lib/utils'
@@ -24,7 +25,7 @@ export default function AdminPage() {
       <Eyebrow>Administration</Eyebrow>
       <h1 className="mt-4 font-poster text-5xl uppercase leading-none text-fog-50 sm:text-6xl">Control Room</h1>
       <p className="mt-3 max-w-xl text-sm text-fog-400">
-        Manage teams, fixtures, standings and tournament information. Changes go live immediately.
+        Manage registrations, teams, fixtures, standings and tournament information. Changes go live immediately.
       </p>
 
       <nav aria-label="Admin sections" className="no-scrollbar -mx-5 mt-10 overflow-x-auto px-5 sm:mx-0 sm:px-0">
@@ -59,6 +60,7 @@ export default function AdminPage() {
         ) : (
           <motion.div key={tab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
             {tab === 'overview' && <OverviewTab onNavigate={go} />}
+            {tab === 'registrations' && <RegistrationsTab />}
             {tab === 'teams' && <TeamsTab />}
             {tab === 'matches' && <MatchesTab />}
             {tab === 'leaderboard' && <LeaderboardTab />}

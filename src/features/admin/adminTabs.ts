@@ -1,7 +1,8 @@
-import { Gauge, ListOrdered, Settings, Shield, Swords, Users, type LucideIcon } from 'lucide-react'
+import { ClipboardList, Gauge, ListOrdered, Settings, Shield, Swords, Users, type LucideIcon } from 'lucide-react'
 
 export const ADMIN_TABS = [
   { id: 'overview', label: 'Overview', icon: Gauge },
+  { id: 'registrations', label: 'Registrations', icon: ClipboardList },
   { id: 'teams', label: 'Teams', icon: Shield },
   { id: 'matches', label: 'Matches', icon: Swords },
   { id: 'leaderboard', label: 'Leaderboard', icon: ListOrdered },

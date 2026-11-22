@@ -17,10 +17,10 @@ function Floodlight({ x, y, scale = 1, glowId }: { x: number; y: number; scale?:
 }
 
 /**
- * Hero illustration: a bat that has just struck the ball, stumps behind,
- * under floodlights. Pure SVG so it stays crisp on every display.
+ * Hero illustration: cricket bat, ball, stumps under floodlights.
+ * Pure SVG — no raster images.
  */
-export function HeroArt({ className, prizePool }: { className?: string; prizePool?: string | null }) {
+export function HeroArt({ className }: { className?: string }) {
   const g = useSvgId()
   const url = (n: string) => `url(#${g(n)})`
 
@@ -64,11 +64,23 @@ export function HeroArt({ className, prizePool }: { className?: string; prizePoo
           <stop offset="0.45" stopColor="#4c9c20" />
           <stop offset="1" stopColor="#123209" />
         </linearGradient>
-        <radialGradient id={g('ball')} cx="36%" cy="30%" r="78%">
-          <stop offset="0" stopColor="#ff8a72" />
-          <stop offset="0.32" stopColor="#d81f2a" />
-          <stop offset="0.72" stopColor="#8a0b14" />
-          <stop offset="1" stopColor="#3d0408" />
+        <radialGradient id={g('ball')} cx="38%" cy="28%" r="72%">
+          <stop offset="0" stopColor="#e8453a" />
+          <stop offset="0.18" stopColor="#d4231e" />
+          <stop offset="0.42" stopColor="#b31a16" />
+          <stop offset="0.68" stopColor="#7a0e0c" />
+          <stop offset="0.88" stopColor="#4a0604" />
+          <stop offset="1" stopColor="#2a0302" />
+        </radialGradient>
+        <radialGradient id={g('ballSheen')} cx="30%" cy="22%" r="45%">
+          <stop offset="0" stopColor="#ff9080" stopOpacity="0.5" />
+          <stop offset="0.5" stopColor="#ff6050" stopOpacity="0.12" />
+          <stop offset="1" stopColor="#ff6050" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id={g('ballRim')} cx="50%" cy="50%" r="50%">
+          <stop offset="0.86" stopColor="#000" stopOpacity="0" />
+          <stop offset="0.96" stopColor="#000" stopOpacity="0.3" />
+          <stop offset="1" stopColor="#000" stopOpacity="0.55" />
         </radialGradient>
         <linearGradient id={g('trail')} x1="305" y1="262" x2="185" y2="175" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#c3f03c" stopOpacity="0" />
@@ -89,7 +101,7 @@ export function HeroArt({ className, prizePool }: { className?: string; prizePoo
           <rect x="-12" y="0" width="24" height="160" rx="11" />
         </clipPath>
         <clipPath id={g('ballClip')}>
-          <circle r="74" />
+          <circle r="58" />
         </clipPath>
         <filter id={g('blur8')} x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="8" />
@@ -129,7 +141,7 @@ export function HeroArt({ className, prizePool }: { className?: string; prizePoo
       <ellipse cx="340" cy="490" rx="64" ry="10" fill="#000" opacity="0.6" filter={url('blur3')} />
 
       {/* Bat */}
-      <g transform="translate(485 120) rotate(33) scale(0.72)">
+      <g transform="translate(475 90) rotate(33) scale(0.88)">
         <path
           d="M46 200 L46 478"
           stroke="#c3f03c"
@@ -198,79 +210,52 @@ export function HeroArt({ className, prizePool }: { className?: string; prizePoo
       </g>
 
       {/* Impact & ball trail */}
-      <circle cx="230" cy="292" r="56" fill={url('flash')} />
-      <polygon points="232,290 176,208 136,264 230,292" fill={url('trail')} />
+      <circle cx="230" cy="292" r="44" fill={url('flash')} />
+      <polygon points="232,290 186,222 152,266 230,292" fill={url('trail')} />
       <g stroke="#e6fca8" strokeLinecap="round" opacity="0.5">
-        <path d="M216 258 L186 218" strokeWidth="1.5" />
-        <path d="M228 272 L200 240" strokeWidth="1" />
-        <path d="M200 288 L172 256" strokeWidth="1" />
+        <path d="M218 264 L196 234" strokeWidth="1.5" />
+        <path d="M228 276 L208 252" strokeWidth="1" />
+        <path d="M206 288 L186 264" strokeWidth="1" />
       </g>
 
       {/* Ball */}
       <g transform="translate(230 292)">
         <g className="animate-float" style={{ transformBox: 'fill-box', transformOrigin: 'center' }}>
-          <circle r="106" fill="#c3f03c" opacity="0.2" filter={url('blur8')} />
-          <circle r="74" fill={url('ball')} />
+          <circle r="82" fill="#c3f03c" opacity="0.2" filter={url('blur8')} />
+          <circle r="58" fill={url('ball')} />
           <g clipPath={url('ballClip')} transform="rotate(-28)">
-            <path d="M-82 -10 C-40 24 40 24 82 -10" fill="none" stroke="#f3e2c0" strokeWidth="4" opacity="0.92" />
+            <path d="M-64 -8 C-31 19 31 19 64 -8" fill="none" stroke="#f3e2c0" strokeWidth="3.2" opacity="0.92" />
             <path
-              d="M-82 -22 C-40 14 40 14 82 -22"
+              d="M-64 -17 C-31 11 31 11 64 -17"
               fill="none"
               stroke="#f3e2c0"
-              strokeWidth="4"
-              strokeDasharray="0.1 8"
+              strokeWidth="3.2"
+              strokeDasharray="0.1 7"
               strokeLinecap="round"
               opacity="0.8"
             />
             <path
-              d="M-82 0 C-40 34 40 34 82 0"
+              d="M-64 0 C-31 27 31 27 64 0"
               fill="none"
               stroke="#f3e2c0"
-              strokeWidth="4"
-              strokeDasharray="0.1 8"
+              strokeWidth="3.2"
+              strokeDasharray="0.1 7"
               strokeLinecap="round"
               opacity="0.8"
             />
           </g>
-          <ellipse cx="-25" cy="-30" rx="28" ry="16" fill="#fff" opacity="0.3" filter={url('blur3')} />
-          <ellipse cx="-29" cy="-36" rx="9" ry="5" fill="#fff" opacity="0.75" />
+          <circle r="58" fill={url('ballSheen')} />
+          <ellipse cx="-20" cy="-24" rx="22" ry="12" fill="#fff" opacity="0.3" filter={url('blur3')} />
+          <ellipse cx="-23" cy="-28" rx="7" ry="4" fill="#fff" opacity="0.75" />
+          <circle r="58" fill={url('ballRim')} />
           <path
-            d="M67 -24.5 A72 72 0 0 1 -24.5 67"
+            d="M52 -19 A56 56 0 0 1 -19 52"
             fill="none"
             stroke="#d4f86c"
-            strokeWidth="4"
+            strokeWidth="3.2"
             strokeLinecap="round"
             opacity="0.75"
           />
-
-          {/* Prize pool on the ball */}
-          {prizePool && (
-            <>
-              <circle r="74" fill="#0a0d0a" fillOpacity="0.35" />
-              <text
-                textAnchor="middle"
-                fontFamily="'Archivo Variable', Archivo, sans-serif"
-                fontWeight="900"
-                fontSize="12"
-                letterSpacing="2"
-                fill="#c3f03c"
-                y="-10"
-                style={{ fontStretch: '115%' }}
-              >
-                PRIZE POOL
-              </text>
-              <text
-                textAnchor="middle"
-                fontFamily="'Archivo Variable', Archivo, sans-serif"
-                fontWeight="900"
-                fontSize="24"
-                fill="#f6f8f5"
-                y="18"
-              >
-                {prizePool}
-              </text>
-            </>
-          )}
         </g>
       </g>
 

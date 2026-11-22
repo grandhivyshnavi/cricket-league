@@ -23,7 +23,7 @@ localStorage and a demo organiser account is available at `/admin/login`
 ## Connecting Supabase
 
 1. Create a Supabase project.
-2. Run `supabase/migrations/20261121000000_init.sql` in the SQL editor (or `supabase db push`).
+2. Run every file in `supabase/migrations/` **in filename order** in the SQL editor (or `supabase db push`).
    Optionally run `supabase/seed.sql` for placeholder data.
 3. Copy `.env.example` → `.env.local` and set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
 4. In **Authentication → Providers**, enable Email. Disable public sign-ups if only organisers need accounts.
@@ -44,7 +44,8 @@ All permissions are enforced in Postgres with Row Level Security — the UI only
 | ------------------------ | ---------------------- | ---------- |
 | Teams, matches, settings | Read                   | Full write |
 | Profiles                 | Own row; cannot change `role` | All |
-| Registrations            | Insert own (`pending`), read own | Full |
+| Registrations + players  | Submit only via `submit_team_registration()` RPC; no read | Full |
+| Team photos (storage)    | Upload one photo to their own pending registration | Read (signed URLs), delete |
 | Payment tables           | Read own transactions  | Read       |
 
 Payment tables are written only by server-side code (service role / Edge Functions).
@@ -69,10 +70,31 @@ results. Confirming a match as completed moves it to Results and optionally reco
 leaderboard is then updated from **Admin → Leaderboard**. Ordering: pinned position, then points, wins and
 fewest losses.
 
-## Registration & payments (pending)
+## Team registration
 
-`/register` is in place. The form fields and workflow will be added once the organisers confirm them
-(`src/features/registration`). The Razorpay flow is planned in `src/features/payments/types.ts`, with
+`/register` collects the team name, an 11-player roster (name + Indian mobile number each), team email and
+contact number, address and one optional team photo (JPG/PNG, max 5 MB). Organisers review submissions in
+**Admin → Registrations** (roster, signed photo link, approve / reject / delete).
+
+Data lives in `registrations` (one row per team) and `registration_players` (11 rows, `player_no` 1–11);
+photos are stored in the private `team-photos` bucket at `<registration id>/team-photo.<jpg|png>`.
+Submission flow (`src/data/registrations.ts`, migrations `20261122120000_team_registrations.sql` and
+`20261122130000_duplicate_prevention.sql`):
+
+1. `submit_team_registration()` validates on the server and inserts the team + 11 players in one transaction.
+2. Duplicate prevention (enforced in the database):
+   * Team name, email and contact phone must each be unique across active (pending/approved) registrations.
+   * A player identity (`normalized_name`, `normalized_phone`) must be unique across active registrations.
+   * The same phone may be used by different players; the same name may be used with different phones.
+   * Address fields are not part of uniqueness.
+3. If a photo was chosen, it is uploaded; storage RLS only allows it while that registration awaits its photo.
+4. `complete_team_registration_photo()` verifies the object and saves the path. If the upload or this step
+   fails, `discard_team_registration()` rolls the registration back. Abandoned submissions (browser closed
+   mid-upload) are shown as *Incomplete* and purged after 30 minutes.
+
+## Payments (pending)
+
+The Razorpay flow is planned in `src/features/payments/types.ts`, with
 `payment_transactions` and `payment_webhook_events` tables already secured. No payment processing is active.
 
 ## Deployment (Vercel)

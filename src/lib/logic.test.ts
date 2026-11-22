@@ -79,7 +79,7 @@ describe('match selectors', () => {
 describe('deriveTournamentStats', () => {
   it('derives from data unless overridden', () => {
     const seed = createDemoSeed()
-    expect(deriveTournamentStats(seed)).toEqual({ teams: 0, matches: 0, days: 7, prizePool: '₹1L' })
+    expect(deriveTournamentStats(seed)).toEqual({ teams: 0, matches: 0, days: 14, prizePool: '₹1 LAKH' })
     const overridden = { ...seed, settings: { ...seed.settings, teamsCountOverride: 16, daysOverride: 24, prizePool: '  ' } }
     expect(deriveTournamentStats(overridden)).toMatchObject({ teams: 16, days: 24, prizePool: null })
   })
