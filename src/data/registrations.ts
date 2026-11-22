@@ -41,7 +41,7 @@ function client(): SupabaseClient {
 
 /**
  * Full submission. Resolves only after everything is persisted:
- *  1. team + 11 players are inserted in one database transaction;
+ *  1. team + 13 players are inserted in one database transaction;
  *  2. the optional photo is uploaded to `<registration id>/team-photo.<ext>`;
  *  3. the photo path is verified and saved.
  * If step 2 or 3 fails, the registration is rolled back and an error is thrown.

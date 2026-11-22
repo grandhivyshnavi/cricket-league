@@ -51,9 +51,9 @@ describe('PIN codes', () => {
 })
 
 describe('validateRegistration', () => {
-  it('starts with exactly 11 empty player slots containing only name and phone', () => {
+  it('starts with exactly 13 empty player slots containing only name and phone', () => {
     const form = emptyRegistrationForm()
-    expect(form.players).toHaveLength(11)
+    expect(form.players).toHaveLength(13)
     expect(Object.keys(form.players[0]).sort()).toEqual(['name', 'phone'])
   })
   it('passes a complete form', () => {
@@ -89,7 +89,7 @@ describe('toSubmission', () => {
       state: 'Andhra Pradesh',
       pinCode: '516001',
     })
-    expect(players).toHaveLength(11)
+    expect(players).toHaveLength(13)
     expect(players[0]).toEqual({ name: 'Player 1', phone: '9876543200' })
   })
 })

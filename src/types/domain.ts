@@ -79,7 +79,7 @@ export interface AuthUser {
 export type RegistrationStatus = 'pending' | 'approved' | 'rejected' | 'cancelled'
 
 export interface RegistrationPlayer {
-  /** Roster position, 1–11. */
+  /** Roster position, 1–13. */
   playerNo: number
   fullName: string
   phone: string

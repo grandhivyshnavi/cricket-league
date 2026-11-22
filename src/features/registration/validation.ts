@@ -7,7 +7,7 @@ import { isValidEmail } from '@/lib/utils'
  * remains the source of truth.
  */
 
-export const PLAYER_COUNT = 11
+export const PLAYER_COUNT = 13
 export const PHOTO_MAX_BYTES = 5 * 1024 * 1024
 export const PHOTO_ACCEPT = 'image/jpeg,image/png,.jpg,.jpeg,.png'
 

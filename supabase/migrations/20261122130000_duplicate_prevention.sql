@@ -139,8 +139,8 @@ begin
   if v_pin !~ '^[1-9][0-9]{5}$' then
     raise exception 'Enter a valid 6-digit PIN code.' using errcode = '22023';
   end if;
-  if jsonb_typeof(p_players) is distinct from 'array' or jsonb_array_length(p_players) <> 11 then
-    raise exception 'Exactly 11 players are required.' using errcode = '22023';
+  if jsonb_typeof(p_players) is distinct from 'array' or jsonb_array_length(p_players) <> 13 then
+    raise exception 'Exactly 13 players are required.' using errcode = '22023';
   end if;
 
   -- Purge incomplete submissions whose photo upload never finished.

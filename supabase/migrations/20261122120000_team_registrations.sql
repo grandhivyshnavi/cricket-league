@@ -86,7 +86,7 @@ create index if not exists registrations_created_idx on public.registrations (cr
 create table if not exists public.registration_players (
   id               uuid primary key default gen_random_uuid(),
   registration_id  uuid not null references public.registrations (id) on delete cascade,
-  player_no        smallint not null check (player_no between 1 and 11),
+  player_no        smallint not null check (player_no between 1 and 13),
   full_name        text not null check (char_length(full_name) between 2 and 80),
   phone            text not null check (phone ~ '^[6-9][0-9]{9}$'),
   created_at       timestamptz not null default now(),
@@ -190,8 +190,8 @@ begin
   if v_pin !~ '^[1-9][0-9]{5}$' then
     raise exception 'Enter a valid 6-digit PIN code.' using errcode = '22023';
   end if;
-  if jsonb_typeof(p_players) is distinct from 'array' or jsonb_array_length(p_players) <> 11 then
-    raise exception 'Exactly 11 players are required.' using errcode = '22023';
+  if jsonb_typeof(p_players) is distinct from 'array' or jsonb_array_length(p_players) <> 13 then
+    raise exception 'Exactly 13 players are required.' using errcode = '22023';
   end if;
 
   -- Purge incomplete submissions whose photo upload never finished.

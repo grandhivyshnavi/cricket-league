@@ -215,7 +215,7 @@ function RegistrationDialog({ registration, onClose, onChanged }: {
         onOpenChange={setConfirmDelete}
         tone="danger"
         title={`Delete ${r.teamName}?`}
-        description="This permanently removes the registration, its 11 players and the team photo."
+        description="This permanently removes the registration, its 13 players and the team photo."
         confirmLabel="Delete registration"
         successMessage="Registration deleted"
         onConfirm={async () => {

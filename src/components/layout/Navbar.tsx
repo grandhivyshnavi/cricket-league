@@ -117,7 +117,7 @@ export function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-x-0 bottom-0 top-[72px] z-40 overflow-y-auto border-t border-white/[0.06] bg-ink-950/95 backdrop-blur-xl lg:hidden"
+            className="fixed inset-x-0 bottom-0 top-[72px] z-[60] overflow-y-auto border-t border-white/[0.06] bg-ink-950/95 backdrop-blur-xl lg:hidden"
           >
             <nav aria-label="Mobile" className="container-page flex min-h-full flex-col py-6">
               <ul className="flex flex-col">
