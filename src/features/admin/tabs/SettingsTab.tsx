@@ -27,6 +27,8 @@ const toForm = (s: TournamentSettings): Form => ({
   daysOverride: s.daysOverride?.toString() ?? '',
   prizePool: s.prizePool ?? '',
   promoVideoUrl: s.promoVideoUrl ?? '',
+  registrationOpens: s.registrationOpens ?? '',
+  registrationCloses: s.registrationCloses ?? '',
 })
 
 const optionalText = (v: string) => v.trim() || null
@@ -43,6 +45,9 @@ function validate(f: Form): Errors {
   }
   if (f.tagline.length > 80) e.tagline = 'Keep the tagline under 80 characters.'
   if (f.description.length > 320) e.description = 'Keep the description under 320 characters.'
+  if (f.registrationOpens && f.registrationCloses && f.registrationCloses < f.registrationOpens) {
+    e.registrationCloses = 'Closing date must be on or after the opening date.'
+  }
   return e
 }
 
@@ -75,6 +80,8 @@ export function SettingsTab() {
         daysOverride: optionalInt(form.daysOverride),
         prizePool: optionalText(form.prizePool),
         promoVideoUrl: optionalText(form.promoVideoUrl),
+        registrationOpens: form.registrationOpens || null,
+        registrationCloses: form.registrationCloses || null,
       })
       toast.success('Tournament information saved')
     } catch (err) {
@@ -118,6 +125,17 @@ export function SettingsTab() {
           </Field>
           <Field id="s-prize" label="Prize Pool" optional hint="Displayed as entered, e.g. ₹5L">
             <Input id="s-prize" value={form.prizePool} maxLength={16} onChange={(e) => set('prizePool', e.target.value)} />
+          </Field>
+        </div>
+      </AdminPanel>
+
+      <AdminPanel title="Registration window" description="Dates between which new team registrations are accepted. The backend enforces these dates independently of the frontend.">
+        <div className="grid gap-5 p-5 sm:grid-cols-2 sm:p-7">
+          <Field id="s-reg-opens" label="Registration opens" optional hint="Leave empty to always accept registrations.">
+            <Input id="s-reg-opens" type="date" value={form.registrationOpens} onChange={(e) => set('registrationOpens', e.target.value)} />
+          </Field>
+          <Field id="s-reg-closes" label="Registration closes" optional error={errors.registrationCloses} hint="Leave empty for no deadline.">
+            <Input id="s-reg-closes" type="date" value={form.registrationCloses} onChange={(e) => set('registrationCloses', e.target.value)} />
           </Field>
         </div>
       </AdminPanel>

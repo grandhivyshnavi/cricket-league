@@ -44,6 +44,10 @@ export interface TournamentSettings {
   daysOverride: number | null
   prizePool: string | null
   promoVideoUrl: string | null
+  /** YYYY-MM-DD — first day registrations are accepted (IST). */
+  registrationOpens: string | null
+  /** YYYY-MM-DD — last day registrations are accepted (IST). */
+  registrationCloses: string | null
   updatedAt: string | null
 }
 

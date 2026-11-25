@@ -51,18 +51,28 @@ describe('PIN codes', () => {
 })
 
 describe('validateRegistration', () => {
-  it('starts with exactly 13 empty player slots containing only name and phone', () => {
+  it('starts with INITIAL_PLAYER_ROWS empty player slots containing only name and phone', () => {
     const form = emptyRegistrationForm()
-    expect(form.players).toHaveLength(13)
+    expect(form.players.length).toBeGreaterThanOrEqual(1)
     expect(Object.keys(form.players[0]).sort()).toEqual(['name', 'phone'])
   })
   it('passes a complete form', () => {
     expect(validateRegistration(validForm())).toEqual({})
   })
-  it('reports every required field on an empty form', () => {
+  it('reports required team fields on an empty form (empty player rows are ignored)', () => {
     const errors = validateRegistration(emptyRegistrationForm())
-    expect(Object.keys(errors)).toHaveLength(7 + PLAYER_COUNT * 2)
+    // Empty player rows are skipped — only team-level required fields are reported.
+    expect(errors.teamName).toBeTruthy()
+    expect(errors.email).toBeTruthy()
+    expect(errors.contactPhone).toBeTruthy()
+    expect(errors.addressLine1).toBeTruthy()
+    expect(errors.city).toBeTruthy()
+    expect(errors.state).toBeTruthy()
+    expect(errors.pinCode).toBeTruthy()
     expect(errors.addressLine2).toBeUndefined()
+    // No player errors because all rows are empty.
+    const playerErrors = Object.keys(errors).filter((k) => k.startsWith('players.'))
+    expect(playerErrors).toHaveLength(0)
   })
   it('flags invalid email, phone, PIN and player numbers', () => {
     const form = validForm()

@@ -5,8 +5,9 @@ import { TrophyArt } from '@/components/brand/TrophyArt'
 import { Badge } from '@/components/ui/badge'
 import { Button, ButtonLink } from '@/components/ui/button'
 import { Reveal } from '@/components/ui/reveal'
-import { ROUTES, TOURNAMENT } from '@/config/site'
+import { REGISTRATION_WINDOW, ROUTES, TOURNAMENT } from '@/config/site'
 import { isRegistrationAvailable } from '@/data/registrations'
+import { registrationStatus } from '@/lib/datetime'
 import { REGISTRATION_SECTIONS, RegistrationForm } from '@/features/registration/RegistrationForm'
 import { PLAYER_COUNT } from '@/features/registration/validation'
 
@@ -29,7 +30,7 @@ function SuccessPanel({ result, onAnother }: { result: Submitted; onAnother(): v
             {result.teamName} is in the queue
           </h2>
           <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-fog-400">
-            Your team and all {PLAYER_COUNT} players have been saved. The organisers will review the registration and
+            Your team registration has been saved. The organisers will review the registration and
             contact you at <span className="font-semibold text-fog-200">{result.email}</span>.
           </p>
           <dl className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -77,6 +78,49 @@ function UnavailablePanel() {
   )
 }
 
+function TesterBanner() {
+  return (
+    <div className="mb-6 rounded-control border border-gold-400/30 bg-gold-400/[0.08] px-4 py-3 text-sm text-fog-200">
+      <span className="font-bold text-gold-400">Tester mode:</span> the registration window is currently closed, but it is being
+      bypassed locally so the form can be tested. The live Supabase backend will still enforce the window unless its
+      tournament_settings dates are also adjusted.
+    </div>
+  )
+}
+
+function RegistrationClosedPanel({ status }: { status: 'before' | 'after' }) {
+  return (
+    <div className="rounded-[2rem] border border-white/[0.07] bg-linear-to-br from-ink-800 to-ink-900 p-8 shadow-card sm:p-12">
+      {status === 'before' ? (
+        <>
+          <Badge tone="neutral">Not yet open</Badge>
+          <h2 className="mt-6 font-heading text-3xl uppercase leading-tight text-fog-50">
+            Registrations open on 1 December 2026
+          </h2>
+          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-fog-400">
+            The registration window runs from <span className="font-semibold text-fog-200">1 December 2026</span> to{' '}
+            <span className="font-semibold text-fog-200">25 December 2026</span>. Come back then to register your team.
+          </p>
+        </>
+      ) : (
+        <>
+          <Badge tone="neutral" className="border-danger-500/25 bg-danger-500/[0.06] text-danger-400">Registrations closed</Badge>
+          <h2 className="mt-6 font-heading text-3xl uppercase leading-tight text-fog-50">
+            Registration period has ended
+          </h2>
+          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-fog-400">
+            The registration window (1–25 December 2026) has ended. If you have a query, please contact the organisers
+            directly.
+          </p>
+        </>
+      )}
+      <ButtonLink to={ROUTES.home} size="lg" variant="secondary" className="mt-8">
+        <House /> Back to Home
+      </ButtonLink>
+    </div>
+  )
+}
+
 function SectionGuide() {
   return (
     <aside className="hidden lg:block">
@@ -102,7 +146,7 @@ function SectionGuide() {
         <div className="mt-6 border-t border-white/[0.06] pt-5 text-xs leading-relaxed text-fog-400">
           <p className="font-semibold text-fog-200">Keep handy</p>
           <ul className="mt-2 grid list-disc gap-1 pl-4 marker:text-volt-400">
-            <li>Names and mobile numbers of all {PLAYER_COUNT} players</li>
+            <li>Names and mobile numbers of your players (up to {PLAYER_COUNT})</li>
             <li>Team email and contact number</li>
             <li>Team address with PIN code</li>
             <li>A team photo (optional, max 5 MB)</li>
@@ -113,9 +157,13 @@ function SectionGuide() {
   )
 }
 
+const bypassWindow = import.meta.env.VITE_BYPASS_REGISTRATION_WINDOW === 'true'
+
 export default function RegisterPage() {
   const [submitted, setSubmitted] = useState<Submitted | null>(null)
   const [formKey, setFormKey] = useState(0)
+  const regStatus = registrationStatus(REGISTRATION_WINDOW.opensDate, REGISTRATION_WINDOW.closesDate)
+  const showForm = isRegistrationAvailable && (regStatus === 'open' || bypassWindow)
 
   return (
     <>
@@ -127,6 +175,8 @@ export default function RegisterPage() {
       <section className="container-page pb-16">
         {!isRegistrationAvailable ? (
           <UnavailablePanel />
+        ) : !showForm && !submitted ? (
+          <RegistrationClosedPanel status={regStatus === 'open' ? 'before' : regStatus} />
         ) : submitted ? (
           <Reveal>
             <SuccessPanel
@@ -139,13 +189,16 @@ export default function RegisterPage() {
           </Reveal>
         ) : (
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_17rem]">
-            <RegistrationForm
-              key={formKey}
-              onSuccess={(result) => {
-                setSubmitted(result)
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }}
-            />
+            <div>
+              {bypassWindow && regStatus !== 'open' && <TesterBanner />}
+              <RegistrationForm
+                key={formKey}
+                onSuccess={(result) => {
+                  setSubmitted(result)
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }}
+              />
+            </div>
             <SectionGuide />
           </div>
         )}

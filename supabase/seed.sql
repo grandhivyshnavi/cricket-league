@@ -22,7 +22,7 @@ insert into public.matches (team1_id, team2_id, scheduled_at, venue) values
 update public.tournament_settings set
   tagline = 'Season 2027 · Sankranthi Edition',
   description = 'The festive-season cricket showdown. Top local sides, floodlit fixtures and a championship trophy — experience every six, wicket and victory this Sankranthi.',
-  start_date = '2027-01-02',
+  start_date = '2026-12-26',
   end_date = '2027-01-15',
   prize_pool = '₹1L'
 where id = 1;

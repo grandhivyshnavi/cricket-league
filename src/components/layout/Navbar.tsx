@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, LayoutDashboard, LogIn, Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Logo } from '@/components/brand/Logo'
 import { ButtonLink, arrowNudge } from '@/components/ui/button'
@@ -30,12 +31,21 @@ export function Navbar() {
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    const onOutside = (e: MouseEvent) => {
+      const target = e.target as Node
+      const header = document.querySelector('header')
+      if (header && !header.contains(target)) setOpen(false)
+    }
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
+    // slight delay so the opening click doesn't immediately trigger close
+    const t = setTimeout(() => document.addEventListener('click', onOutside), 50)
     return () => {
       document.body.style.overflow = prev
       window.removeEventListener('keydown', onKey)
+      document.removeEventListener('click', onOutside)
+      clearTimeout(t)
     }
   }, [open])
 
@@ -109,63 +119,70 @@ export function Navbar() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            id="mobile-nav"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-x-0 bottom-0 top-[72px] z-[60] overflow-y-auto border-t border-white/[0.06] bg-ink-950/95 backdrop-blur-xl lg:hidden"
-          >
-            <nav aria-label="Mobile" className="container-page flex min-h-full flex-col py-6">
-              <ul className="flex flex-col">
-                {NAV_ITEMS.map((item, i) => (
-                  <motion.li
-                    key={item.to}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.04 * i, duration: 0.3 }}
-                  >
-                    <NavLink
-                      to={item.to}
-                      end={item.to === ROUTES.home}
-                      className={({ isActive }) =>
-                        cn(
-                          'flex items-center justify-between border-b border-white/[0.05] py-4 font-heading text-2xl uppercase transition-colors',
-                          isActive ? 'text-volt-400' : 'text-fog-200 hover:text-fog-50',
-                        )
-                      }
+      {createPortal(
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              id="mobile-nav"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Navigation menu"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed inset-x-0 bottom-0 top-[72px] z-[9999] overflow-y-auto border-t border-white/[0.06] bg-ink-950/95 backdrop-blur-xl lg:hidden"
+            >
+              <nav aria-label="Mobile" className="container-page flex min-h-full flex-col py-6">
+                <ul className="flex flex-col">
+                  {NAV_ITEMS.map((item, i) => (
+                    <motion.li
+                      key={item.to}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.04 * i, duration: 0.3 }}
                     >
-                      {({ isActive }) => (
-                        <>
-                          {item.label}
-                          {isActive && <span className="size-2 rounded-full bg-volt-400 shadow-glow-sm" />}
-                        </>
-                      )}
-                    </NavLink>
-                  </motion.li>
-                ))}
-              </ul>
-              <div className="mt-auto flex flex-col gap-3 pt-10">
-                {isAdmin ? (
-                  <ButtonLink to={ROUTES.admin} variant="secondary" size="lg">
-                    <LayoutDashboard /> Admin panel
+                      <NavLink
+                        to={item.to}
+                        end={item.to === ROUTES.home}
+                        onClick={() => setOpen(false)}
+                        className={({ isActive }) =>
+                          cn(
+                            'flex items-center justify-between border-b border-white/[0.05] py-4 font-heading text-2xl uppercase transition-colors',
+                            isActive ? 'text-volt-400' : 'text-fog-200 hover:text-fog-50',
+                          )
+                        }
+                      >
+                        {({ isActive }) => (
+                          <>
+                            {item.label}
+                            {isActive && <span className="size-2 rounded-full bg-volt-400 shadow-glow-sm" />}
+                          </>
+                        )}
+                      </NavLink>
+                    </motion.li>
+                  ))}
+                </ul>
+                <div className="mt-auto flex flex-col gap-3 pt-10">
+                  {isAdmin ? (
+                    <ButtonLink to={ROUTES.admin} variant="secondary" size="lg" onClick={() => setOpen(false)}>
+                      <LayoutDashboard /> Admin panel
+                    </ButtonLink>
+                  ) : (
+                    <ButtonLink to={ROUTES.adminLogin} variant="secondary" size="lg" onClick={() => setOpen(false)}>
+                      <LogIn /> Admin Login
+                    </ButtonLink>
+                  )}
+                  <ButtonLink to={ROUTES.register} size="lg" onClick={() => setOpen(false)}>
+                    Join Tournament <ArrowRight />
                   </ButtonLink>
-                ) : (
-                  <ButtonLink to={ROUTES.adminLogin} variant="secondary" size="lg">
-                    <LogIn /> Admin Login
-                  </ButtonLink>
-                )}
-                <ButtonLink to={ROUTES.register} size="lg">
-                  Join Tournament <ArrowRight />
-                </ButtonLink>
-              </div>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                </div>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body,
+      )}
     </header>
   )
 }

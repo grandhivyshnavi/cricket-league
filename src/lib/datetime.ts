@@ -69,6 +69,29 @@ export function formatDateRange(start: string | null, end: string | null) {
   return `${formatShortDate(start)} – ${formatShortDate(end)} ${year}`
 }
 
+/** Returns the current IST date as a YYYY-MM-DD string.
+ *  IST is a fixed UTC+05:30 offset — no daylight saving. */
+export function todayIST(): string {
+  const now = new Date()
+  const shifted = new Date(now.getTime() + IST_OFFSET_MS)
+  return shifted.toISOString().slice(0, 10)
+}
+
+/** Returns whether today (in IST) falls within [openDate, closeDate] inclusive.
+ *  Both dates are YYYY-MM-DD strings. */
+export function isWithinDateRange(openDate: string, closeDate: string): boolean {
+  const today = todayIST()
+  return today >= openDate && today <= closeDate
+}
+
+/** Returns 'before' | 'open' | 'after' relative to the given IST date range. */
+export function registrationStatus(openDate: string, closeDate: string): 'before' | 'open' | 'after' {
+  const today = todayIST()
+  if (today < openDate) return 'before'
+  if (today > closeDate) return 'after'
+  return 'open'
+}
+
 /** Human-friendly relative time, e.g. "2 hours ago", "3 days ago". */
 export function formatRelative(iso: string) {
   const ms = Date.now() - new Date(iso).getTime()

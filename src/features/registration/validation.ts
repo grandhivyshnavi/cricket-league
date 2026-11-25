@@ -7,7 +7,12 @@ import { isValidEmail } from '@/lib/utils'
  * remains the source of truth.
  */
 
-export const PLAYER_COUNT = 13
+/** No longer a fixed count — the form starts with INITIAL_PLAYER_ROWS and
+ *  lets teams add or remove players. The backend accepts 1–13 players. */
+export const PLAYER_COUNT = 13       // kept for display / success message
+export const MIN_PLAYERS = 1
+export const MAX_PLAYERS = 13
+export const INITIAL_PLAYER_ROWS = 3  // shown by default (all optional)
 export const PHOTO_MAX_BYTES = 5 * 1024 * 1024
 export const PHOTO_ACCEPT = 'image/jpeg,image/png,.jpg,.jpeg,.png'
 
@@ -33,10 +38,10 @@ export type PlayerField = `players.${number}.${keyof PlayerEntry}`
 export type FieldKey = TeamField | PlayerField | 'photo'
 export type FormErrors = Partial<Record<FieldKey, string>>
 
-/** Order used to focus the first invalid field after a failed submit. */
-export const FIELD_ORDER: FieldKey[] = [
+/** Order used to focus the first invalid field after a failed submit.
+ *  Player count is variable so we build this dynamically in validateRegistration. */
+export const FIELD_ORDER_BASE: FieldKey[] = [
   'teamName',
-  ...Array.from({ length: PLAYER_COUNT }, (_, i) => [`players.${i}.name`, `players.${i}.phone`] as PlayerField[]).flat(),
   'email',
   'contactPhone',
   'addressLine1',
@@ -46,6 +51,17 @@ export const FIELD_ORDER: FieldKey[] = [
   'pinCode',
   'photo',
 ]
+
+export function fieldOrderForPlayers(count: number): FieldKey[] {
+  const playerFields = Array.from({ length: count }, (_, i) =>
+    [`players.${i}.name`, `players.${i}.phone`] as PlayerField[],
+  ).flat()
+  return ['teamName', ...playerFields, 'email', 'contactPhone', 'addressLine1', 'addressLine2', 'city', 'state', 'pinCode', 'photo']
+}
+
+/** Legacy alias kept for components that read FIELD_ORDER at module level.
+ *  Defaults to MAX_PLAYERS — form code should use fieldOrderForPlayers(). */
+export const FIELD_ORDER: FieldKey[] = fieldOrderForPlayers(MAX_PLAYERS)
 
 export function emptyRegistrationForm(): RegistrationForm {
   return {
@@ -57,8 +73,18 @@ export function emptyRegistrationForm(): RegistrationForm {
     city: '',
     state: '',
     pinCode: '',
-    players: Array.from({ length: PLAYER_COUNT }, () => ({ name: '', phone: '' })),
+    players: Array.from({ length: INITIAL_PLAYER_ROWS }, () => ({ name: '', phone: '' })),
   }
+}
+
+/** Returns true when both fields of a player row are empty (row should be ignored). */
+export function isEmptyPlayer(p: PlayerEntry) {
+  return !p.name.trim() && !p.phone.trim()
+}
+
+/** Returns true when only one of name/phone is filled (partial row). */
+export function isPartialPlayer(p: PlayerEntry) {
+  return !isEmptyPlayer(p) && (!p.name.trim() || !p.phone.trim())
 }
 
 /** Strips control characters and collapses whitespace (same as the database). */
@@ -99,6 +125,8 @@ export function validateField(key: Exclude<FieldKey, 'photo'>, form: Registratio
     const index = Number(player[1])
     const entry = form.players[index]
     if (!entry) return null
+    // Empty rows are skipped — only validate when the row is at least partially filled.
+    if (isEmptyPlayer(entry)) return null
     return player[2] === 'name'
       ? lengthError(entry.name, `Player ${index + 1} name`, 2, 80)
       : mobileError(entry.phone, `Player ${index + 1} contact number`)
@@ -130,15 +158,18 @@ export function validateField(key: Exclude<FieldKey, 'photo'>, form: Registratio
 
 export function validateRegistration(form: RegistrationForm): FormErrors {
   const errors: FormErrors = {}
-  for (const key of FIELD_ORDER) {
+  const dynamicFieldOrder = fieldOrderForPlayers(form.players.length)
+  for (const key of dynamicFieldOrder) {
     if (key === 'photo') continue
     const error = validateField(key, form)
     if (error) errors[key] = error
   }
 
   // Intra-form duplicate player detection (name + phone identity).
+  // Only among non-empty rows.
   const seen = new Map<string, number>()
   for (let i = 0; i < form.players.length; i++) {
+    if (isEmptyPlayer(form.players[i])) continue
     const name = cleanText(form.players[i].name).toLowerCase()
     const phone = normalizeIndianMobile(form.players[i].phone)
     if (!name || !phone || phone.length !== 10) continue
@@ -199,8 +230,13 @@ export interface RegistrationSubmission {
   players: { name: string; phone: string }[]
 }
 
-/** Normalised payload sent to `submit_team_registration()`. */
+/** Normalised payload sent to `submit_team_registration()`.
+ *  Empty player rows are dropped; only fully completed rows are included. */
 export function toSubmission(form: RegistrationForm): RegistrationSubmission {
+  const players = form.players
+    .filter((p) => !isEmptyPlayer(p))
+    .map((p) => ({ name: cleanText(p.name), phone: normalizeIndianMobile(p.phone) }))
+
   return {
     team: {
       teamName: cleanText(form.teamName),
@@ -212,7 +248,7 @@ export function toSubmission(form: RegistrationForm): RegistrationSubmission {
       state: cleanText(form.state),
       pinCode: form.pinCode.replace(/\s/g, ''),
     },
-    players: form.players.map((p) => ({ name: cleanText(p.name), phone: normalizeIndianMobile(p.phone) })),
+    players,
   }
 }
 

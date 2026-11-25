@@ -41,6 +41,8 @@ interface SettingsRow {
   days_override: number | null
   prize_pool: string | null
   promo_video_url: string | null
+  registration_opens: string | null
+  registration_closes: string | null
   updated_at: string | null
 }
 
@@ -84,6 +86,8 @@ const toSettings = (r: SettingsRow | null): TournamentSettings =>
         daysOverride: r.days_override,
         prizePool: r.prize_pool,
         promoVideoUrl: r.promo_video_url,
+        registrationOpens: r.registration_opens,
+        registrationCloses: r.registration_closes,
         updatedAt: r.updated_at,
       }
     : EMPTY_SETTINGS
@@ -211,6 +215,8 @@ export function createSupabaseRepository(client: SupabaseClient): TournamentRepo
         days_override: input.daysOverride,
         prize_pool: input.prizePool,
         promo_video_url: input.promoVideoUrl,
+        registration_opens: input.registrationOpens,
+        registration_closes: input.registrationCloses,
       })
       if (error) throw toAppError(error)
     },

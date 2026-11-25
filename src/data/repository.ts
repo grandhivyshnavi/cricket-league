@@ -46,5 +46,7 @@ export const EMPTY_SETTINGS: TournamentSettings = {
   daysOverride: null,
   prizePool: null,
   promoVideoUrl: null,
+  registrationOpens: null,
+  registrationCloses: null,
   updatedAt: null,
 }

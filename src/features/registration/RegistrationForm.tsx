@@ -1,4 +1,4 @@
-import { CircleExclamationPoint, Send } from 'lucide-react'
+import { CircleExclamationPoint, Minus, Plus, Send } from 'lucide-react'
 import { useMemo, useRef, useState, type ChangeEvent, type FormEvent, type InputHTMLAttributes, type ReactNode } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -8,9 +8,10 @@ import { cn, getErrorMessage } from '@/lib/utils'
 import { INDIAN_STATES } from './indianStates'
 import { PhotoUpload } from './PhotoUpload'
 import {
-  FIELD_ORDER,
-  PLAYER_COUNT,
+  MAX_PLAYERS,
   emptyRegistrationForm,
+  fieldOrderForPlayers,
+  isEmptyPlayer,
   isIndianMobile,
   mapDuplicateError,
   normalizeIndianMobile,
@@ -103,7 +104,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
   const submitting = stage !== null
 
   const liveErrors = useMemo(() => validateRegistration(form), [form])
-  const playersDone = form.players.filter((_, i) => !liveErrors[`players.${i}.name`] && !liveErrors[`players.${i}.phone`]).length
+  const completedPlayers = form.players.filter((p) => !isEmptyPlayer(p) && !liveErrors[`players.${form.players.indexOf(p)}.name`] && !liveErrors[`players.${form.players.indexOf(p)}.phone`]).length
 
   const setError = (key: FieldKey, message: string | null | undefined) =>
     setErrors((e) => (e[key] === (message ?? undefined) ? e : { ...e, [key]: message ?? undefined }))
@@ -134,13 +135,42 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
   /** Tidies a valid mobile number to its 10-digit form when leaving the field. */
   const tidyMobile = (value: string) => (isIndianMobile(value) ? normalizeIndianMobile(value) : value)
 
+  function addPlayer() {
+    if (form.players.length >= MAX_PLAYERS) return
+    setForm((f) => ({ ...f, players: [...f.players, { name: '', phone: '' }] }))
+  }
+
+  function removePlayer(index: number) {
+    setForm((f) => {
+      const players = f.players.filter((_, i) => i !== index)
+      return { ...f, players }
+    })
+    // Clear any errors for the removed row and re-index subsequent rows.
+    setErrors((e) => {
+      const next: FormErrors = {}
+      for (const [k, v] of Object.entries(e)) {
+        const m = /^players\.(\d+)\.(.+)$/.exec(k)
+        if (m) {
+          const idx = Number(m[1])
+          if (idx === index) continue
+          const newIdx = idx > index ? idx - 1 : idx
+          next[`players.${newIdx}.${m[2]}` as FieldKey] = v as string
+        } else {
+          next[k as FieldKey] = v as string
+        }
+      }
+      return next
+    })
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     if (busy.current) return
     const found: FormErrors = { ...validateRegistration(form) }
     if (errors.photo) found.photo = errors.photo
     setErrors(found)
-    const invalid = FIELD_ORDER.filter((k) => found[k])
+    const dynamicOrder = fieldOrderForPlayers(form.players.length)
+    const invalid = dynamicOrder.filter((k) => found[k])
     if (invalid.length) {
       setSubmitError(`Please fix ${invalid.length} highlighted field${invalid.length === 1 ? '' : 's'} before registering.`)
       const el = document.getElementById(fieldId(invalid[0]))
@@ -203,57 +233,70 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         id="reg-roster"
         step={2}
         title="Player Roster"
-        description={`Exactly ${PLAYER_COUNT} players — name and mobile number for each.`}
+        description={`Add your players (up to ${MAX_PLAYERS}). Empty rows are ignored — only completed rows will be saved.`}
         aside={
           <div className="flex items-center gap-3 sm:min-w-44" aria-live="polite">
             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/[0.06]" aria-hidden>
               <div
                 className="h-full rounded-full bg-volt-400 shadow-glow-sm transition-[width] duration-500 ease-out-expo"
-                style={{ width: `${(playersDone / PLAYER_COUNT) * 100}%` }}
+                style={{ width: `${(completedPlayers / MAX_PLAYERS) * 100}%` }}
               />
             </div>
             <span className="text-xs font-semibold tabular-nums text-fog-300">
-              {playersDone}/{PLAYER_COUNT} <span className="sr-only">players complete</span>
+              {completedPlayers}/{MAX_PLAYERS} <span className="sr-only">players complete</span>
             </span>
           </div>
         }
       >
         <div
-          className="hidden grid-cols-[3rem_1fr_1fr] gap-4 px-4 pb-3 text-[11px] font-bold uppercase tracking-[0.14em] text-fog-500 md:grid"
+          className="hidden grid-cols-[3rem_1fr_1fr_2.5rem] gap-4 px-4 pb-3 text-[11px] font-bold uppercase tracking-[0.14em] text-fog-500 md:grid"
           aria-hidden
         >
           <span>#</span>
-          <span>
-            Player name <span className="text-volt-400">*</span>
-          </span>
-          <span>
-            Contact number <span className="text-volt-400">*</span>
-          </span>
+          <span>Player name</span>
+          <span>Contact number</span>
+          <span />
         </div>
         <ol className="grid gap-3 md:gap-0 md:divide-y md:divide-white/[0.05] md:overflow-hidden md:rounded-card md:border md:border-white/[0.06]">
           {form.players.map((player, i) => {
             const nameKey: FieldKey = `players.${i}.name`
             const phoneKey: FieldKey = `players.${i}.phone`
+            // Initial rows (index < INITIAL_PLAYER_ROWS) can be removed if more rows were added;
+            // always show remove button when there are more than 1 rows.
+            const canRemove = form.players.length > 1
             return (
               <li
                 key={i}
-                className="rounded-card border border-white/[0.06] bg-white/[0.015] p-4 md:grid md:grid-cols-[3rem_1fr_1fr] md:items-start md:gap-4 md:rounded-none md:border-0 md:bg-transparent md:px-4 md:py-3 md:even:bg-white/[0.012]"
+                className="rounded-card border border-white/[0.06] bg-white/[0.015] p-4 md:grid md:grid-cols-[3rem_1fr_1fr_2.5rem] md:items-start md:gap-4 md:rounded-none md:border-0 md:bg-transparent md:px-4 md:py-3 md:even:bg-white/[0.012]"
               >
-                <div className="mb-3 flex items-center gap-3 md:mb-0 md:h-11">
-                  <span className="grid size-8 place-items-center rounded-lg border border-white/10 bg-ink-900 font-heading text-xs tabular-nums text-fog-300">
-                    {i + 1}
-                  </span>
-                  <span className="text-sm font-semibold text-fog-200 md:hidden">Player {i + 1}</span>
+                <div className="mb-3 flex items-center justify-between md:mb-0 md:h-11">
+                  <div className="flex items-center gap-3">
+                    <span className="grid size-8 place-items-center rounded-lg border border-white/10 bg-ink-900 font-heading text-xs tabular-nums text-fog-300">
+                      {i + 1}
+                    </span>
+                    <span className="text-sm font-semibold text-fog-200 md:hidden">Player {i + 1}</span>
+                  </div>
+                  {/* Mobile remove button */}
+                  {canRemove && (
+                    <button
+                      type="button"
+                      onClick={() => removePlayer(i)}
+                      disabled={submitting}
+                      className="grid size-8 place-items-center rounded-lg border border-danger-500/30 bg-danger-500/[0.06] text-danger-400 transition-colors hover:border-danger-500/60 hover:bg-danger-500/[0.12] disabled:opacity-40 md:hidden"
+                      aria-label={`Remove player ${i + 1}`}
+                    >
+                      <Minus className="size-3.5" />
+                    </button>
+                  )}
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2 md:contents">
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor={fieldId(nameKey)} className="text-xs font-semibold text-fog-400 md:sr-only">
-                      <span className="sr-only">Player {i + 1} </span>Name<span className="text-volt-400" aria-hidden> *</span>
+                      <span className="sr-only">Player {i + 1} </span>Name
                     </label>
                     <Input
                       id={fieldId(nameKey)}
                       value={player.name}
-                      required
                       maxLength={80}
                       autoComplete="off"
                       placeholder="Full name"
@@ -271,12 +314,11 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor={fieldId(phoneKey)} className="text-xs font-semibold text-fog-400 md:sr-only">
-                      <span className="sr-only">Player {i + 1} </span>Contact number<span className="text-volt-400" aria-hidden> *</span>
+                      <span className="sr-only">Player {i + 1} </span>Contact number
                     </label>
                     <MobileInput
                       id={fieldId(phoneKey)}
                       value={player.phone}
-                      required
                       autoComplete="off"
                       disabled={submitting}
                       onChange={(e) => setPlayer(i, 'phone', e.target.value)}
@@ -294,10 +336,39 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                     )}
                   </div>
                 </div>
+                {/* Desktop remove button */}
+                <div className="hidden md:flex md:h-11 md:items-center md:justify-center">
+                  {canRemove && (
+                    <button
+                      type="button"
+                      onClick={() => removePlayer(i)}
+                      disabled={submitting}
+                      className="grid size-8 place-items-center rounded-lg border border-danger-500/30 bg-danger-500/[0.06] text-danger-400 transition-colors hover:border-danger-500/60 hover:bg-danger-500/[0.12] disabled:opacity-40"
+                      aria-label={`Remove player ${i + 1}`}
+                    >
+                      <Minus className="size-3.5" />
+                    </button>
+                  )}
+                </div>
               </li>
             )
           })}
         </ol>
+
+        {/* Add Player button */}
+        {form.players.length < MAX_PLAYERS && (
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={addPlayer}
+              disabled={submitting}
+              className="flex items-center gap-2 rounded-control border border-dashed border-volt-400/30 bg-volt-400/[0.04] px-4 py-2.5 text-sm font-semibold text-volt-300 transition-colors hover:border-volt-400/60 hover:bg-volt-400/[0.08] disabled:opacity-40"
+            >
+              <Plus className="size-4" />
+              Add Player
+            </button>
+          </div>
+        )}
       </FormSection>
 
       <FormSection id="reg-contact" step={3} title="Contact Details" description="How the organisers will reach your team.">
