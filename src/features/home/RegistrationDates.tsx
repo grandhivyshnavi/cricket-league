@@ -5,6 +5,7 @@ import { Reveal } from '@/components/ui/reveal'
 import { REGISTRATION_WINDOW, ROUTES } from '@/config/site'
 import { formatShortDate, registrationStatus } from '@/lib/datetime'
 import { ArrowRight } from 'lucide-react'
+import { RegistrationFee } from '@/features/registration/RegistrationFee'
 
 const opensFormatted = formatShortDate(`${REGISTRATION_WINDOW.opensDate}T12:00:00+05:30`)
 const closesFormatted = formatShortDate(`${REGISTRATION_WINDOW.closesDate}T12:00:00+05:30`)
@@ -117,6 +118,11 @@ export function RegistrationDates() {
                 fullDate={closesFormatted}
                 accent={false}
               />
+            </div>
+
+            {/* Fee */}
+            <div className="mt-6">
+              <RegistrationFee />
             </div>
 
             {/* Timeline bar */}

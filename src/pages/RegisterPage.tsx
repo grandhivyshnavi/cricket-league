@@ -102,6 +102,9 @@ function RegistrationClosedPanel({ status }: { status: 'before' | 'after' }) {
             The registration window runs from <span className="font-semibold text-fog-200">1 December 2026</span> to{' '}
             <span className="font-semibold text-fog-200">25 December 2026</span>. Come back then to register your team.
           </p>
+          <div className="mt-6">
+            <RegistrationFee />
+          </div>
         </>
       ) : (
         <>
@@ -173,8 +176,7 @@ export default function RegisterPage() {
         title="Join the Tournament"
         description={`Register your team for the ${TOURNAMENT.name}. It takes a few minutes — have your squad's details ready.`}
       />
-      <section className="container-page grid gap-6 pb-16">
-        <RegistrationFee />
+      <section className="container-page pb-16">
         {!isRegistrationAvailable ? (
           <UnavailablePanel />
         ) : !showForm && !submitted ? (
