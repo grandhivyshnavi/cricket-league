@@ -94,28 +94,35 @@ function RegistrationClosedPanel({ status }: { status: 'before' | 'after' }) {
     <div className="rounded-[2rem] border border-white/[0.07] bg-linear-to-br from-ink-800 to-ink-900 p-8 shadow-card sm:p-12">
       {status === 'before' ? (
         <>
-          <Badge tone="neutral">Not yet open</Badge>
-          <h2 className="mt-6 font-heading text-3xl uppercase leading-tight text-fog-50">
-            Registrations open on 1 December 2026
-          </h2>
-          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-fog-400">
-            The registration window runs from <span className="font-semibold text-fog-200">1 December 2026</span> to{' '}
-            <span className="font-semibold text-fog-200">25 December 2026</span>. Come back then to register your team.
-          </p>
-          <div className="mt-6 flex justify-center sm:justify-start">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <Badge tone="neutral">Not yet open</Badge>
+              <h2 className="mt-6 font-heading text-3xl uppercase leading-tight text-fog-50">
+                Registrations open on 1 December 2026
+              </h2>
+              <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-fog-400">
+                The registration window runs from <span className="font-semibold text-fog-200">1 December 2026</span> to{' '}
+                <span className="font-semibold text-fog-200">25 December 2026</span>. Come back then to register your team.
+              </p>
+            </div>
             <RegistrationFee />
           </div>
         </>
       ) : (
         <>
-          <Badge tone="neutral" className="border-danger-500/25 bg-danger-500/[0.06] text-danger-400">Registrations closed</Badge>
-          <h2 className="mt-6 font-heading text-3xl uppercase leading-tight text-fog-50">
-            Registration period has ended
-          </h2>
-          <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-fog-400">
-            The registration window (1–25 December 2026) has ended. If you have a query, please contact the organisers
-            directly.
-          </p>
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <Badge tone="neutral" className="border-danger-500/25 bg-danger-500/[0.06] text-danger-400">Registrations closed</Badge>
+              <h2 className="mt-6 font-heading text-3xl uppercase leading-tight text-fog-50">
+                Registration period has ended
+              </h2>
+              <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-fog-400">
+                The registration window (1–25 December 2026) has ended. If you have a query, please contact the organisers
+                directly.
+              </p>
+            </div>
+            <RegistrationFee />
+          </div>
         </>
       )}
       <ButtonLink to={ROUTES.home} size="lg" variant="secondary" className="mt-8">

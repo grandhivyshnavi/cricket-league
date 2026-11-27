@@ -58,7 +58,7 @@ export function RegistrationDates() {
 
           <div className="p-8 sm:p-12">
             {/* Header */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <Eyebrow>Registrations</Eyebrow>
                 <h2
@@ -72,24 +72,27 @@ export function RegistrationDates() {
                 </p>
               </div>
 
-              {/* Status pill */}
-              {status === 'open' && (
-                <span className="inline-flex items-center gap-2 self-start rounded-full border border-volt-400/30 bg-volt-400/[0.08] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-volt-300 sm:self-auto">
-                  <span className="size-1.5 animate-pulse rounded-full bg-volt-400" aria-hidden />
-                  Registrations Open
-                </span>
-              )}
-              {status === 'before' && (
-                <span className="inline-flex items-center gap-2 self-start rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-fog-400 sm:self-auto">
-                  <Clock className="size-3.5" aria-hidden />
-                  Opens Soon
-                </span>
-              )}
-              {status === 'after' && (
-                <span className="inline-flex items-center gap-2 self-start rounded-full border border-danger-500/25 bg-danger-500/[0.06] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-danger-400 sm:self-auto">
-                  Registrations Closed
-                </span>
-              )}
+              <div className="flex flex-col items-start gap-3 sm:items-end">
+                {/* Status pill */}
+                {status === 'open' && (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-volt-400/30 bg-volt-400/[0.08] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-volt-300">
+                    <span className="size-1.5 animate-pulse rounded-full bg-volt-400" aria-hidden />
+                    Registrations Open
+                  </span>
+                )}
+                {status === 'before' && (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-fog-400">
+                    <Clock className="size-3.5" aria-hidden />
+                    Opens Soon
+                  </span>
+                )}
+                {status === 'after' && (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-danger-500/25 bg-danger-500/[0.06] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-danger-400">
+                    Registrations Closed
+                  </span>
+                )}
+                <RegistrationFee />
+              </div>
             </div>
 
             {/* Date cards */}
@@ -118,11 +121,6 @@ export function RegistrationDates() {
                 fullDate={closesFormatted}
                 accent={false}
               />
-            </div>
-
-            {/* Fee */}
-            <div className="mt-8 flex justify-center sm:justify-start">
-              <RegistrationFee />
             </div>
 
             {/* Timeline bar */}
