@@ -42,6 +42,15 @@ export const NAV_ITEMS = [
   { label: 'About', to: ROUTES.about },
 ] as const
 
+/** Tournament contact numbers (displayed in footer and About page). */
+export const CONTACT_NUMBERS = [
+  { label: 'Organiser', value: '6383392960' },
+  { label: 'Support', value: '9666442022' },
+] as const
+
+/** Registration fee displayed on the registration form. */
+export const REGISTRATION_FEE = '₹3,300/-'
+
 /** All fixture times are entered and displayed in Indian Standard Time. */
 export const TIME_ZONE = 'Asia/Kolkata'
 export const TIME_ZONE_LABEL = 'IST'

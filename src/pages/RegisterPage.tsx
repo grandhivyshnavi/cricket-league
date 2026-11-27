@@ -1,11 +1,11 @@
-import { CalendarDays, CircleCheck, ClipboardList, House, Plus } from 'lucide-react'
+import { CalendarDays, CircleCheck, ClipboardList, House, IndianRupee, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { TrophyArt } from '@/components/brand/TrophyArt'
 import { Badge } from '@/components/ui/badge'
 import { Button, ButtonLink } from '@/components/ui/button'
 import { Reveal } from '@/components/ui/reveal'
-import { REGISTRATION_WINDOW, ROUTES, TOURNAMENT } from '@/config/site'
+import { REGISTRATION_FEE, REGISTRATION_WINDOW, ROUTES, TOURNAMENT } from '@/config/site'
 import { isRegistrationAvailable } from '@/data/registrations'
 import { registrationStatus } from '@/lib/datetime'
 import { REGISTRATION_SECTIONS, RegistrationForm } from '@/features/registration/RegistrationForm'
@@ -191,6 +191,17 @@ export default function RegisterPage() {
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_17rem]">
             <div>
               {bypassWindow && regStatus !== 'open' && <TesterBanner />}
+              <div className="mb-6 flex items-center gap-3 rounded-card border border-volt-400/20 bg-volt-400/10 px-5 py-4 shadow-[0_0_24px_-8px_rgba(195,240,60,0.25)]">
+                <span className="grid size-10 place-items-center rounded-full bg-volt-400/15 text-volt-400">
+                  <IndianRupee className="size-5" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-fog-400">Registration Fee</p>
+                  <p className="font-poster text-2xl uppercase leading-none tracking-tight text-volt-400">
+                    {REGISTRATION_FEE}
+                  </p>
+                </div>
+              </div>
               <RegistrationForm
                 key={formKey}
                 onSuccess={(result) => {

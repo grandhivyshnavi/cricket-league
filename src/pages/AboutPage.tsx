@@ -1,8 +1,8 @@
-import { CalendarDays, MapPin } from 'lucide-react'
+import { CalendarDays, MapPin, Phone } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { Reveal } from '@/components/ui/reveal'
-import { TOURNAMENT } from '@/config/site'
+import { CONTACT_NUMBERS, TOURNAMENT } from '@/config/site'
 import { JoinCta } from '@/features/home/JoinCta'
 import { TournamentInfo } from '@/features/home/TournamentInfo'
 import { formatDateRange } from '@/lib/datetime'
@@ -40,7 +40,7 @@ export default function AboutPage() {
             : settings.description || `${TOURNAMENT.name} — the festive-season cricket championship.`
         }
       />
-      <section className="container-page grid gap-5 md:grid-cols-2">
+      <section className="container-page grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         <Reveal className="h-full">
           <FactCard icon={CalendarDays} label="Season dates">
             <p className="font-heading text-2xl uppercase">{range ?? 'To be announced'}</p>
@@ -57,6 +57,22 @@ export default function AboutPage() {
             ) : (
               <p className="font-heading text-2xl uppercase">To be announced</p>
             )}
+          </FactCard>
+        </Reveal>
+        <Reveal delay={0.16} className="h-full">
+          <FactCard icon={Phone} label="Contact us">
+            <ul className="space-y-2">
+              {CONTACT_NUMBERS.map((c) => (
+                <li key={c.value}>
+                  <a
+                    href={`tel:+91${c.value}`}
+                    className="inline-flex items-center gap-2 font-heading text-2xl uppercase text-fog-100 transition-colors hover:text-volt-300"
+                  >
+                    <span className="tabular-nums">{c.value}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </FactCard>
         </Reveal>
       </section>
