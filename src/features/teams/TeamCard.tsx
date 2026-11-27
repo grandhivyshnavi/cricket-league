@@ -18,47 +18,47 @@ export function TeamCard({ team, nextMatch, showRank }: { team: RankedTeam; next
   return (
     <article className="group relative flex min-w-0 flex-col overflow-hidden rounded-card surface transition-[transform,border-color] duration-500 ease-out-expo hover:-translate-y-1 hover:border-volt-400/25">
       <div
-        className="pointer-events-none absolute -right-10 -top-10 size-32 rounded-full opacity-20 blur-2xl transition-opacity duration-500 group-hover:opacity-35"
+        className="pointer-events-none absolute -right-8 -top-8 size-28 rounded-full opacity-20 blur-2xl transition-opacity duration-500 group-hover:opacity-35"
         style={{ backgroundColor: team.color }}
         aria-hidden
       />
 
-      <div className="relative flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="relative flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Left: identity */}
-        <div className="flex min-w-0 items-center gap-3 sm:flex-[2]">
-          <TeamCrest team={team} size="md" className="shrink-0 transition-transform duration-500 ease-out-expo group-hover:scale-105" />
+        <div className="flex min-w-0 items-center gap-2.5 sm:flex-[2]">
+          <TeamCrest team={team} size="sm" className="shrink-0 transition-transform duration-500 ease-out-expo group-hover:scale-105" />
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="truncate font-heading text-lg uppercase leading-tight text-fog-50">{team.name}</h3>
+              <h3 className="truncate font-heading text-base uppercase leading-tight text-fog-50">{team.name}</h3>
               {showRank && (
-                <span className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-bold tabular-nums text-fog-300">
+                <span className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-fog-300">
                   #{team.rank}
                 </span>
               )}
             </div>
-            <p className="mt-0.5 truncate text-sm text-fog-500">{team.city ?? '\u00a0'}</p>
+            <p className="truncate text-xs text-fog-500">{team.city ?? '\u00a0'}</p>
           </div>
         </div>
 
         {/* Middle: squad */}
         <div className="flex min-w-0 flex-col justify-center sm:flex-[2] sm:px-4 sm:border-x sm:border-white/[0.06]">
-          <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-fog-500">
+          <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.16em] text-fog-500">
             <Users className="size-3 text-volt-400" aria-hidden />
             Squad · {team.playerCount} player{team.playerCount === 1 ? '' : 's'}
           </p>
           {team.playerCount > 0 && (
-            <p className="mt-1 line-clamp-1 text-sm text-fog-300">
-              {team.playerNames.slice(0, 5).join(', ')}
-              {team.playerNames.length > 5 && (
-                <span className="text-fog-500"> +{team.playerNames.length - 5}</span>
+            <p className="mt-0.5 line-clamp-1 text-xs text-fog-300">
+              {team.playerNames.slice(0, 6).join(', ')}
+              {team.playerNames.length > 6 && (
+                <span className="text-fog-500"> +{team.playerNames.length - 6}</span>
               )}
             </p>
           )}
         </div>
 
         {/* Right: stats */}
-        <div className="flex items-center justify-between gap-4 sm:flex-[1] sm:justify-end">
-          <dl className="grid grid-cols-4 gap-3 rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2 text-center">
+        <div className="flex items-center justify-between gap-3 sm:flex-[1] sm:justify-end">
+          <dl className="grid grid-cols-4 gap-2 rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-1.5 text-center">
             {(
               [
                 ['M', team.played],
@@ -67,9 +67,9 @@ export function TeamCard({ team, nextMatch, showRank }: { team: RankedTeam; next
                 ['Pts', team.points],
               ] as const
             ).map(([label, v]) => (
-              <div key={label} className="min-w-[2rem]">
+              <div key={label} className="min-w-[1.75rem]">
                 <dt className="text-[9px] font-bold uppercase tracking-[0.16em] text-fog-500">{label}</dt>
-                <dd className={`mt-0.5 font-heading text-base tabular-nums ${label === 'Pts' ? 'text-volt-300' : 'text-fog-100'}`}>{v}</dd>
+                <dd className={`mt-0.5 font-heading text-sm tabular-nums ${label === 'Pts' ? 'text-volt-300' : 'text-fog-100'}`}>{v}</dd>
               </div>
             ))}
           </dl>
@@ -88,7 +88,7 @@ export function TeamCard({ team, nextMatch, showRank }: { team: RankedTeam; next
       </div>
 
       {/* Bottom: fixture */}
-      <div className="relative flex min-h-[2.5rem] items-center gap-2 border-t border-white/[0.06] bg-white/[0.015] px-4 text-xs text-fog-400">
+      <div className="relative flex min-h-[2rem] items-center gap-2 border-t border-white/[0.06] bg-white/[0.015] px-4 py-1.5 text-xs text-fog-400">
         <CalendarDays className="size-3.5 shrink-0 text-volt-400" aria-hidden />
         {nextMatch && opponent ? (
           <span className="min-w-0 truncate">

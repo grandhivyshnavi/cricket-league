@@ -37,7 +37,7 @@ export default function TeamsPage() {
         {status === 'loading' ? (
           <div className="grid gap-4">
             {Array.from({ length: 4 }, (_, i) => (
-              <Skeleton key={i} className="h-32 rounded-card" />
+              <Skeleton key={i} className="h-28 rounded-card" />
             ))}
           </div>
         ) : status === 'error' ? (
