@@ -8,6 +8,7 @@ import { Reveal } from '@/components/ui/reveal'
 import { REGISTRATION_WINDOW, ROUTES, TOURNAMENT } from '@/config/site'
 import { isRegistrationAvailable } from '@/data/registrations'
 import { registrationStatus } from '@/lib/datetime'
+import { RegistrationFee } from '@/features/registration/RegistrationFee'
 import { REGISTRATION_SECTIONS, RegistrationForm } from '@/features/registration/RegistrationForm'
 import { PLAYER_COUNT } from '@/features/registration/validation'
 
@@ -172,7 +173,8 @@ export default function RegisterPage() {
         title="Join the Tournament"
         description={`Register your team for the ${TOURNAMENT.name}. It takes a few minutes — have your squad's details ready.`}
       />
-      <section className="container-page pb-16">
+      <section className="container-page grid gap-6 pb-16">
+        <RegistrationFee />
         {!isRegistrationAvailable ? (
           <UnavailablePanel />
         ) : !showForm && !submitted ? (
