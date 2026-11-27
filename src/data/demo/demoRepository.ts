@@ -78,6 +78,9 @@ export const demoRepository: TournamentRepository = {
         points: 0,
         manualRank: null,
         createdAt: new Date().toISOString(),
+        registrationId: null,
+        playerCount: 0,
+        playerNames: [],
       })
     }),
 

@@ -16,6 +16,9 @@ interface TeamRow {
   points: number
   manual_rank: number | null
   created_at: string
+  registration_id: string | null
+  player_count: number
+  player_names: string[] | null
 }
 
 interface MatchRow {
@@ -59,6 +62,9 @@ const toTeam = (r: TeamRow): Team => ({
   points: r.points,
   manualRank: r.manual_rank,
   createdAt: r.created_at,
+  registrationId: r.registration_id,
+  playerCount: r.player_count ?? 0,
+  playerNames: r.player_names ?? [],
 })
 
 const toMatch = (r: MatchRow): Match => ({

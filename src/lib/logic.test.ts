@@ -10,7 +10,8 @@ import type { Team } from '@/types/domain'
 
 const team = (id: string, o: Partial<Team> = {}): Team => ({
   id, name: id, shortName: id.slice(0, 2), city: null, logoUrl: null, color: '#ffffff',
-  played: 0, won: 0, lost: 0, points: 0, manualRank: null, createdAt: '', ...o,
+  played: 0, won: 0, lost: 0, points: 0, manualRank: null, createdAt: '',
+  registrationId: null, playerCount: 0, playerNames: [], ...o,
 })
 
 describe('rankTeams', () => {

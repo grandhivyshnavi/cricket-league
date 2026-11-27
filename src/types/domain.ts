@@ -16,6 +16,11 @@ export interface Team {
   /** Optional admin override that pins a team to a leaderboard position. */
   manualRank: number | null
   createdAt: string
+  /** Link back to the approved registration that created this team. */
+  registrationId: string | null
+  /** Public-safe roster summary copied from the registration. */
+  playerCount: number
+  playerNames: string[]
 }
 
 export interface Match {

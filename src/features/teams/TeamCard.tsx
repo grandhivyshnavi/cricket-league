@@ -1,4 +1,4 @@
-import { CalendarDays, Pencil, Trash } from 'lucide-react'
+import { CalendarDays, Pencil, Trash, Users } from 'lucide-react'
 import { TeamCrest } from '@/components/brand/TeamCrest'
 import { Button } from '@/components/ui/button'
 import { formatMatchDate } from '@/lib/datetime'
@@ -44,6 +44,21 @@ export function TeamCard({ team, nextMatch, showRank }: { team: RankedTeam; next
       </div>
       <h3 className="relative mt-5 font-heading text-xl uppercase leading-tight text-fog-50">{team.name}</h3>
       <p className="relative mt-1 text-sm text-fog-500">{team.city ?? '\u00a0'}</p>
+
+      {team.playerCount > 0 && (
+        <div className="relative mt-4">
+          <p className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-fog-500">
+            <Users className="size-3 text-volt-400" aria-hidden />
+            Squad · {team.playerCount} player{team.playerCount === 1 ? '' : 's'}
+          </p>
+          <p className="mt-1.5 line-clamp-2 text-sm leading-snug text-fog-300">
+            {team.playerNames.slice(0, 4).join(', ')}
+            {team.playerNames.length > 4 && (
+              <span className="text-fog-500"> +{team.playerNames.length - 4} more</span>
+            )}
+          </p>
+        </div>
+      )}
 
       <dl className="relative mt-6 grid grid-cols-4 gap-2 border-t border-white/[0.06] pt-5 text-center">
         {(
