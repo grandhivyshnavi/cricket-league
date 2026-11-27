@@ -35,9 +35,9 @@ export default function TeamsPage() {
       />
       <section className="container-page pb-16">
         {status === 'loading' ? (
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }, (_, i) => (
-              <Skeleton key={i} className="h-64 rounded-card" />
+          <div className="grid gap-5 md:grid-cols-2">
+            {Array.from({ length: 4 }, (_, i) => (
+              <Skeleton key={i} className="h-[200px] rounded-card" />
             ))}
           </div>
         ) : status === 'error' ? (
@@ -45,7 +45,7 @@ export default function TeamsPage() {
         ) : ranked.length === 0 ? (
           <EmptyState icon={Shield} title="Teams will be announced soon" description="Check back once registrations close." />
         ) : (
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-2">
             {ranked.map((t, i) => (
               <Reveal key={t.id} delay={Math.min(i, 8) * 0.04} className="h-full min-w-0">
                 <TeamCard team={t} nextMatch={nextFor(t.id)} showRank={showRank} />
