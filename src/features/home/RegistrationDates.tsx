@@ -121,7 +121,7 @@ export function RegistrationDates() {
             </div>
 
             {/* Fee */}
-            <div className="mt-6">
+            <div className="mt-8 flex justify-center sm:justify-start">
               <RegistrationFee />
             </div>
 

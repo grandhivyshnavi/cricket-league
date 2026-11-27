@@ -102,7 +102,7 @@ function RegistrationClosedPanel({ status }: { status: 'before' | 'after' }) {
             The registration window runs from <span className="font-semibold text-fog-200">1 December 2026</span> to{' '}
             <span className="font-semibold text-fog-200">25 December 2026</span>. Come back then to register your team.
           </p>
-          <div className="mt-6">
+          <div className="mt-6 flex justify-center sm:justify-start">
             <RegistrationFee />
           </div>
         </>
