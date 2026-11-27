@@ -273,3 +273,8 @@ export function validatePhotoFile(file: Pick<File, 'name' | 'type' | 'size'>): s
   if (file.size > PHOTO_MAX_BYTES) return 'The photo must be 5 MB or smaller.'
   return null
 }
+
+export function validatePhotoPresence(file: File | null): string | null {
+  if (!file) return 'A team photo is required.'
+  return validatePhotoFile(file)
+}

@@ -52,8 +52,9 @@ export async function submitTeamRegistration(
   onStage?: (stage: SubmitStage) => void,
 ): Promise<{ id: string }> {
   const db = client()
-  const ext = photo ? photoExtension(photo) : null
-  if (photo && !ext) throw new AppError('Only JPG, JPEG or PNG images are allowed.')
+  if (!photo) throw new AppError('A team photo is required. Please upload a team photo before registering.')
+  const ext = photoExtension(photo)
+  if (!ext) throw new AppError('Only JPG, JPEG or PNG images are allowed.')
 
   onStage?.('saving')
   const { data, error } = await db.rpc('submit_team_registration', {

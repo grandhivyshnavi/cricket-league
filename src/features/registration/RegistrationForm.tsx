@@ -18,6 +18,7 @@ import {
   normalizeIndianMobile,
   toSubmission,
   validateField,
+  validatePhotoPresence,
   validateRegistration,
   type FieldKey,
   type FormErrors,
@@ -168,9 +169,11 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     e.preventDefault()
     if (busy.current) return
     const found: FormErrors = { ...validateRegistration(form) }
-    if (errors.photo) found.photo = errors.photo
+    const photoError = validatePhotoPresence(photo)
+    if (photoError) found.photo = photoError
+    else if (errors.photo) found.photo = errors.photo
     setErrors(found)
-    const dynamicOrder = fieldOrderForPlayers(form.players.length)
+    const dynamicOrder: FieldKey[] = [...fieldOrderForPlayers(form.players.length), 'photo']
     const invalid = dynamicOrder.filter((k) => found[k])
     if (invalid.length) {
       setSubmitError(`Please fix ${invalid.length} highlighted field${invalid.length === 1 ? '' : 's'} before registering.`)
@@ -439,7 +442,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         </div>
       </FormSection>
 
-      <FormSection id="reg-photo-section" step={5} title="Team Photo" description="Optional — one group photo of your squad.">
+      <FormSection id="reg-photo-section" step={5} title="Team Photo" description="One group photo of your squad is required.">
         <PhotoUpload
           id={fieldId('photo')}
           file={photo}

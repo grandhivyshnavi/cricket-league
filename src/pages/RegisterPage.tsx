@@ -160,7 +160,7 @@ function SectionGuide() {
             <li>Names and mobile numbers of your players (up to {PLAYER_COUNT})</li>
             <li>Team email and contact number</li>
             <li>Team address with PIN code</li>
-            <li>A team photo (optional, max 5 MB)</li>
+            <li>A team photo (required, max 5 MB)</li>
           </ul>
         </div>
       </div>

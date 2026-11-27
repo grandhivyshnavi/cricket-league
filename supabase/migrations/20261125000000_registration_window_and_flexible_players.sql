@@ -103,6 +103,11 @@ begin
       using errcode = '22023';
   end if;
 
+  -- ── Photo required ──────────────────────────────────────────────────
+  if not coalesce(p_with_photo, false) then
+    raise exception 'A team photo is required. Please upload a team photo before registering.' using errcode = '22023';
+  end if;
+
   -- ── Basic input validation ──────────────────────────────────────────
   if jsonb_typeof(p_team) is distinct from 'object' then
     raise exception 'Invalid registration data.' using errcode = '22023';
